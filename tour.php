@@ -21,7 +21,7 @@ include 'includes/header.php';
     .tour-layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding: 80px 0; align-items: start; }
     .content-box { background: var(--white); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-soft); margin-bottom: 40px; }
     .section-title { font-size: 28px; color: var(--navy); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 16px; } 
-    .section-title i { color: var(--gold); font-size: 24px; }
+    .section-title i { font-size: 24px; }
     .tour-text { font-size: 16px; color: var(--text-muted); line-height: 1.9; margin-bottom: 24px; }
     
     .price-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin: 30px 0; }
@@ -35,21 +35,27 @@ include 'includes/header.php';
     .info-item h5 { font-size: 16px; color: var(--navy); margin-bottom: 4px; } 
     .info-item p { font-size: 14px; color: var(--text-muted); }
     
-    .dual-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; } 
-    .styled-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text-muted); margin-bottom: 12px; } 
-    .styled-list.exclude li i { color: var(--terracotta); } 
-    .styled-list.bring li i { color: var(--turquoise); }
+    /* Lists Styling */
+    .dual-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;} 
+    .styled-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; } 
+    .styled-list.include li i { color: #28a745; margin-top: 4px; } /* Green check */
+    .styled-list.exclude li i { color: var(--terracotta); margin-top: 4px; } /* Red cross */
+    .styled-list.bring li i { color: var(--turquoise); margin-top: 4px; } /* Turquoise suitcase */
     
     .booking-widget { background: var(--white); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-medium); position: sticky; top: 100px; border-top: 6px solid var(--gold); }
     .booking-form input, .booking-form textarea { width: 100%; padding: 14px; background: var(--sand); border: 1px solid transparent; border-radius: 12px; margin-bottom: 16px;}
     .btn-book { width: 100%; padding: 16px; background: #25D366; color: var(--white); border: none; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer; }
     
-    @media (max-width: 991px) { .tour-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 991px) { 
+        .tour-layout { grid-template-columns: 1fr; } 
+        .dual-lists { grid-template-columns: 1fr; }
+    }
 </style>
 
 <section class="page-hero">
-    <!-- الصورة من الداتا بيز -->
-    <div class="page-hero-bg"><img src="admin/uploads/<?= htmlspecialchars($tour['hero_image']) ?>" alt="<?= htmlspecialchars($tour['title']) ?>"></div>
+    <div class="page-hero-bg">
+        <img src="<?= get_image_url($tour['hero_image'], 'tour') ?>" alt="<?= htmlspecialchars($tour['title']) ?>">
+    </div>
     <div class="page-hero-overlay"></div>
     <div class="container">
       <div class="page-hero-content">
@@ -67,7 +73,7 @@ include 'includes/header.php';
       
       <!-- Overview -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-file-lines"></i> Tour Details</h2>
+        <h2 class="section-title"><i class="fa-solid fa-file-lines" style="color: var(--gold);"></i> Tour Details</h2>
         <div class="tour-text">
           <?= html_entity_decode($tour['overview']) ?>
         </div>
@@ -76,13 +82,12 @@ include 'includes/header.php';
         <div class="price-cards">
           <div class="price-card"><h4>Single</h4><p>$<?= htmlspecialchars($tour['price_single']) ?></p></div>
           <div class="price-card"><h4>2-3 Persons</h4><p>$<?= htmlspecialchars($tour['price_group_small']) ?></p></div>
-          <div class="price-card"><h4>4-6 Persons</h4><p>$<?= htmlspecialchars($tour['price']) ?></p></div>
         </div>
       </div>
 
       <!-- Info -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-circle-info"></i> Important Information</h2>
+        <h2 class="section-title"><i class="fa-solid fa-circle-info" style="color: var(--gold);"></i> Important Information</h2>
         <div class="info-grid">
           <div class="info-item"><i class="fa-solid fa-language"></i><div><h5>Languages</h5><p><?= htmlspecialchars($tour['languages']) ?></p></div></div>
           <div class="info-item"><i class="fa-solid fa-calendar-check"></i><div><h5>Availability</h5><p><?= htmlspecialchars($tour['availability']) ?></p></div></div>
@@ -91,27 +96,34 @@ include 'includes/header.php';
         </div>
       </div>
 
-      <!-- Excludes & Brings -->
+      <!-- Includes, Excludes & Brings -->
       <div class="content-box">
         <div class="dual-lists">
           <div>
-            <h2 class="section-title"><i class="fa-solid fa-circle-xmark" style="color:var(--terracotta);"></i> Excludes</h2>
+            <h2 class="section-title"><i class="fa-solid fa-circle-check" style="color:#28a745;"></i> Included</h2>
+            <ul class="styled-list include">
+                <?= html_entity_decode($tour['includes_html'] ?? '<li style="color: var(--text-muted);"><i class="fa-solid fa-minus" style="color:#ccc;"></i> Details will be added soon.</li>') ?>
+            </ul>
+          </div>
+          <div>
+            <h2 class="section-title"><i class="fa-solid fa-circle-xmark" style="color:var(--terracotta);"></i> Excluded</h2>
             <ul class="styled-list exclude">
                 <?= html_entity_decode($tour['excludes_html']) ?>
             </ul>
           </div>
-          <div>
+        </div>
+
+        <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 30px;">
             <h2 class="section-title"><i class="fa-solid fa-suitcase" style="color:var(--turquoise);"></i> What to bring</h2>
-            <ul class="styled-list bring">
+            <ul class="styled-list bring" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                 <?= html_entity_decode($tour['brings_html']) ?>
             </ul>
-          </div>
         </div>
       </div>
 
       <!-- Itinerary -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Itinerary</h2>
+        <h2 class="section-title"><i class="fa-solid fa-map-location-dot" style="color: var(--gold);"></i> Itinerary</h2>
         <div class="tour-text">
             <?= html_entity_decode($tour['itinerary']) ?>
         </div>

@@ -1,6 +1,8 @@
 <?php
 // Path: /packages.php
 require_once 'config.php';
+// جلب الإعدادات لربط خلفية الهيرو
+$settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // جلب الباقات السياحية من قاعدة البيانات
 $stmt = $pdo->query("SELECT * FROM tours WHERE type = 'package' ORDER BY id DESC");
@@ -54,12 +56,12 @@ include 'includes/header.php';
 
 <section class="page-hero">
   <div class="page-hero-bg">
-    <img src="admin/assets/images/packages-bg.jpg" alt="Tour Packages Scene">
+    <img src="<?= get_image_url($settings['hero_packages'] ?? '', 'placeholder') ?>" alt="Tour Packages Scene">
   </div>
   <div class="page-hero-overlay"></div>
   <div class="container">
     <div class="page-hero-content">
-      <div class="breadcrumb"><a href="/">Home</a> <i class="fa-solid fa-circle"></i> <span>Tour Packages</span></div>
+      <div class="breadcrumb"><a href="index.php">Home</a> <i class="fa-solid fa-circle"></i> <span>Tour Packages</span></div>
       <h1 class="page-hero-title">Tour <span>Packages</span></h1>
     </div>
   </div>
@@ -83,7 +85,7 @@ include 'includes/header.php';
       <?php foreach($packages as $pkg): ?>
       <div class="tour-card reveal">
         <a href="tour.php?id=<?= $pkg['id'] ?>" class="tour-image">
-          <img src="admin/uploads/<?= htmlspecialchars($pkg['hero_image']) ?>" alt="<?= htmlspecialchars($pkg['title']) ?>">
+          <img src="<?= get_image_url($pkg['hero_image'], 'tour') ?>" alt="<?= htmlspecialchars($pkg['title']) ?>">
           <div class="tour-badge"><i class="fa-solid fa-star"></i> 5.0</div>
           <div class="tour-wishlist"><i class="fa-regular fa-heart"></i></div>
         </a>

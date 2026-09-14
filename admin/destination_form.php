@@ -22,9 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $hero_image = $dest['hero_image'];
     if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] == 0) {
-        $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
-        $hero_image = time() . '_dest.' . $ext;
-        move_uploaded_file($_FILES['hero_image']['tmp_name'], 'uploads/' . $hero_image);
+        $ext = strtolower(pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif']; // الصيغ المسموحة للحماية
+        
+        if (in_array($ext, $allowed)) {
+            $hero_image = time() . '_dest.' . $ext;
+            move_uploaded_file($_FILES['hero_image']['tmp_name'], 'uploads/' . $hero_image);
+            
+            // مسح الصورة القديمة من السيرفر
+            if ($is_edit && !empty($dest['hero_image']) && strpos($dest['hero_image'], 'http') !== 0 && file_exists('uploads/' . $dest['hero_image'])) {
+                unlink('uploads/' . $dest['hero_image']);
+            }
+        } else {
+            $_SESSION['toast'] = ['title' => 'Security Error', 'message' => 'Invalid image format. Only JPG, PNG, WEBP, GIF are allowed.', 'type' => 'danger'];
+            header("Location: destination_form.php" . ($is_edit ? "?id=$id" : ""));
+            exit;
+        }
     }
 
     if ($is_edit) {
@@ -69,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="form-group">
             <label class="form-label">Hero Banner Image</label>
-            <input type="file" name="hero_image" class="form-control" accept="image/*" <?= $is_edit ? '' : 'required' ?>>
+            <input type="file" name="hero_image" class="form-control" accept="image/jpeg, image/png, image/webp, image/gif" <?= $is_edit ? '' : 'required' ?>>
             <?php if($dest['hero_image']): ?>
                 <img src="<?= get_image_url($dest['hero_image'], 'destination') ?>" style="height:80px; border-radius:8px; margin-top:10px;" alt="">
             <?php endif; ?>

@@ -155,8 +155,42 @@
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
+    
+  </script>
+ <!--Start of Tawk.to Script-->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    
+    // --- الكود الجديد لتتبع الصفحات والرحلات وإرسالها للتطبيق ---
+    Tawk_API.onLoad = function() {
+        // جلب اسم الصفحة أو الرحلة (مع إزالة اسم الموقع ليكون الاسم قصيراً وواضحاً في التطبيق)
+        var pageName = "<?= isset($pageTitle) ? addslashes(str_replace(' | Egypt Travel Square', '', $pageTitle)) : 'Home Page' ?>";
+        var pageUrl = window.location.href;
+
+        // 1. إضافة مسار الزائر كـ Attribute ليظهر أمامك في بيانات الزائر في التطبيق
+        Tawk_API.setAttributes({
+            'Currently Viewing': pageName
+        }, function (error) {});
+
+        // 2. إرسال حدث (Event) للتطبيق عند فتح رحلة أو باقة
+        if(pageUrl.indexOf('tour.php') !== -1 || pageUrl.indexOf('destination.php') !== -1) {
+            Tawk_API.addEvent('Viewed_Tour', {
+                'Tour Name': pageName,
+                'URL': pageUrl
+            });
+        }
+    };
+    // -------------------------------------------------------------
+
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/5dd51f20d96992700fc85857/default';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
   </script>
   <!--End of Tawk.to Script-->
-
 </body>
 </html>

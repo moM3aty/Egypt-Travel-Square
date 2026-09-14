@@ -13,7 +13,7 @@ include 'includes/header.php';
 
 <section class="page-hero">
     <div class="page-hero-bg">
-        <img src="<?= get_image_url($settings['home_hero_bg'] ?? '', 'placeholder') ?>" alt="Where to Go in Egypt">
+        <img src="<?= get_image_url($settings['hero_wheretogo'] ?? '', 'placeholder') ?>" alt="Where to Go in Egypt">
     </div>
     <div class="page-hero-overlay"></div>
     <div class="container">

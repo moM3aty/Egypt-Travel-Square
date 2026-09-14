@@ -3,7 +3,7 @@
 require_once 'config.php';
 $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetchAll(PDO::FETCH_KEY_PAIR);
 
-$msg = '';
+// استبدل الجزء الخاص بالـ POST في أعلى reviews.php بهذا الكود:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $country = $_POST['country'];
@@ -12,6 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $pdo->prepare("INSERT INTO reviews (name, country, rating, review_text, status) VALUES (?, ?, ?, ?, 'pending')");
     $stmt->execute([$name, $country, $rating, $review_text]);
+    
+    // إعادة التوجيه لمنع تكرار الإرسال عند التحديث
+    header("Location: reviews.php?success=1");
+    exit;
+}
+
+$msg = '';
+if (isset($_GET['success']) && $_GET['success'] == 1) {
     $msg = "Thank you! Your review has been submitted and is pending approval.";
 }
 

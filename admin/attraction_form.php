@@ -22,9 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $image = $attr['image'];
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $image = time() . '_attr.' . $ext;
-        move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
+        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif']; // الصيغ المسموحة للحماية
+        
+        if (in_array($ext, $allowed)) {
+            $image = time() . '_attr.' . $ext;
+            move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
+            
+            // مسح الصورة القديمة من السيرفر
+            if ($is_edit && !empty($attr['image']) && strpos($attr['image'], 'http') !== 0 && file_exists('uploads/' . $attr['image'])) {
+                unlink('uploads/' . $attr['image']);
+            }
+        } else {
+            $_SESSION['toast'] = ['title' => 'Security Error', 'message' => 'Invalid image format. Only JPG, PNG, WEBP, GIF are allowed.', 'type' => 'danger'];
+            header("Location: attraction_form.php" . ($is_edit ? "?id=$id" : ""));
+            exit;
+        }
     }
 
     if ($is_edit) {
@@ -76,7 +89,7 @@ $destinations = $pdo->query("SELECT id, name FROM destinations ORDER BY name ASC
 
         <div class="form-group">
             <label class="form-label">Image Upload</label>
-            <input type="file" name="image" class="form-control" accept="image/*" <?= $is_edit ? '' : 'required' ?>>
+            <input type="file" name="image" class="form-control" accept="image/jpeg, image/png, image/webp, image/gif" <?= $is_edit ? '' : 'required' ?>>
             <?php if($attr['image']): ?>
                 <img src="<?= get_image_url($attr['image'], 'placeholder') ?>" style="height:80px; border-radius:8px; margin-top:10px;" alt="">
             <?php endif; ?>

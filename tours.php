@@ -51,7 +51,6 @@ include 'includes/header.php';
                     <a href="tour.php?id=<?= $tour['id'] ?>" class="tour-image">
                         <img src="<?= get_image_url($tour['hero_image'], 'tour') ?>" alt="<?= htmlspecialchars($tour['title']) ?>">
                         <div class="tour-badge"><i class="fa-solid fa-star"></i> 5.0</div>
-                        <div class="tour-wishlist"><i class="fa-regular fa-heart"></i></div>
                     </a>
                     <div class="tour-body" style="background: var(--white);">
                         <div class="tour-location"><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($tour['location']) ?></div>

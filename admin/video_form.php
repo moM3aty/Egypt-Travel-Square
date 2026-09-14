@@ -19,9 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $video_path = $video['video_path'];
 
     if (isset($_FILES['video_file']) && $_FILES['video_file']['error'] == 0) {
-        $ext = pathinfo($_FILES['video_file']['name'], PATHINFO_EXTENSION);
-        $video_path = time() . '_vid.' . $ext;
-        move_uploaded_file($_FILES['video_file']['tmp_name'], 'uploads/' . $video_path);
+        $ext = strtolower(pathinfo($_FILES['video_file']['name'], PATHINFO_EXTENSION));
+        $allowed = ['mp4', 'webm', 'ogg']; // الصيغ المسموحة للحماية الخاصة بالفيديو
+        
+        if (in_array($ext, $allowed)) {
+            $video_path = time() . '_vid.' . $ext;
+            move_uploaded_file($_FILES['video_file']['tmp_name'], 'uploads/' . $video_path);
+            
+            // مسح الفيديو القديم من السيرفر
+            if ($is_edit && !empty($video['video_path']) && strpos($video['video_path'], 'http') !== 0 && file_exists('uploads/' . $video['video_path'])) {
+                unlink('uploads/' . $video['video_path']);
+            }
+        } else {
+            $_SESSION['toast'] = ['title' => 'Security Error', 'message' => 'Invalid video format. Only MP4, WebM, OGG are allowed.', 'type' => 'danger'];
+            header("Location: video_form.php" . ($is_edit ? "?id=$id" : ""));
+            exit;
+        }
     }
 
     if ($is_edit) {
@@ -54,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="form-group">
                 <label class="form-label">Video File (MP4/WebM) <?= $is_edit ? '(Leave empty to keep current)' : '*' ?></label>
-                <input type="file" name="video_file" class="form-control" accept="video/*" <?= $is_edit ? '' : 'required' ?>>
+                <input type="file" name="video_file" class="form-control" accept="video/mp4, video/webm, video/ogg" <?= $is_edit ? '' : 'required' ?>>
             </div>
         </div>
         <div class="form-group">

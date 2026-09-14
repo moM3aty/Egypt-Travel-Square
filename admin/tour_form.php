@@ -2,15 +2,26 @@
 // Path: /admin/tour_form.php
 require_once 'header.php';
 
+// ==========================================
+// التحديث التلقائي لقاعدة البيانات (إضافة عمود includes_html إذا لم يكن موجوداً)
+// ==========================================
+try {
+    $pdo->exec("ALTER TABLE tours ADD COLUMN includes_html TEXT AFTER overview");
+} catch (PDOException $e) {
+    // تجاهل الخطأ إذا كان العمود موجوداً بالفعل
+}
+// ==========================================
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $is_edit = $id > 0;
 
+// إضافة الحقل الجديد في المصفوفة الافتراضية
 $tour = [
     'title' => '', 'type' => 'day', 'location' => '', 'price' => '',
     'price_single' => '', 'price_group_small' => '', 'duration' => '',
     'timing' => '', 'languages' => 'English, Spanish, German, French',
     'availability' => 'Runs on a daily basis', 'overview' => '',
-    'excludes_html' => '', 'brings_html' => '', 'itinerary' => '', 'hero_image' => ''
+    'includes_html' => '', 'excludes_html' => '', 'brings_html' => '', 'itinerary' => '', 'hero_image' => ''
 ];
 
 if ($is_edit) {
@@ -24,32 +35,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
     $type = $_POST['type'];
     $location = $_POST['location'];
-    $price = $_POST['price'];
-    $price_single = $_POST['price_single'];
+    
+    // تم حذف السعر الأساسي من الفورم ليأخذ قيمته من سعر الجروب تلقائياً
     $price_group_small = $_POST['price_group_small'];
+    $price = $price_group_small; // <-- الحيلة الذكية هنا
+    
+    $price_single = $_POST['price_single'];
     $duration = $_POST['duration'];
     $timing = $_POST['timing'];
     $languages = $_POST['languages'];
     $availability = $_POST['availability'];
     $overview = $_POST['overview'];
+    $includes_html = $_POST['includes_html'];
     $excludes_html = $_POST['excludes_html'];
     $brings_html = $_POST['brings_html'];
     $itinerary = $_POST['itinerary'];
 
     $hero_image = $tour['hero_image'];
     if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] == 0) {
-        $ext = pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION);
-        $hero_image = time() . '_tour.' . $ext;
-        move_uploaded_file($_FILES['hero_image']['tmp_name'], 'uploads/' . $hero_image);
+        $ext = strtolower(pathinfo($_FILES['hero_image']['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        
+        if (in_array($ext, $allowed)) {
+            $hero_image = time() . '_tour.' . $ext;
+            move_uploaded_file($_FILES['hero_image']['tmp_name'], 'uploads/' . $hero_image);
+            
+            // مسح الصورة القديمة
+            if ($is_edit && !empty($tour['hero_image']) && strpos($tour['hero_image'], 'http') !== 0 && file_exists('uploads/' . $tour['hero_image'])) {
+                unlink('uploads/' . $tour['hero_image']);
+            }
+        } else {
+            $_SESSION['toast'] = ['title' => 'Security Error', 'message' => 'Invalid image format. Only JPG, PNG, WEBP, GIF are allowed.', 'type' => 'danger'];
+            header("Location: tour_form.php" . ($is_edit ? "?id=$id" : ""));
+            exit;
+        }
     }
 
     if ($is_edit) {
-        $stmt = $pdo->prepare("UPDATE tours SET type=?, title=?, location=?, hero_image=?, price=?, price_single=?, price_group_small=?, duration=?, timing=?, languages=?, availability=?, overview=?, excludes_html=?, brings_html=?, itinerary=? WHERE id=?");
-        $stmt->execute([$type, $title, $location, $hero_image, $price, $price_single, $price_group_small, $duration, $timing, $languages, $availability, $overview, $excludes_html, $brings_html, $itinerary, $id]);
+        $stmt = $pdo->prepare("UPDATE tours SET type=?, title=?, location=?, hero_image=?, price=?, price_single=?, price_group_small=?, duration=?, timing=?, languages=?, availability=?, overview=?, includes_html=?, excludes_html=?, brings_html=?, itinerary=? WHERE id=?");
+        $stmt->execute([$type, $title, $location, $hero_image, $price, $price_single, $price_group_small, $duration, $timing, $languages, $availability, $overview, $includes_html, $excludes_html, $brings_html, $itinerary, $id]);
         $_SESSION['toast'] = ['title' => 'Tour Updated', 'message' => 'Tour details updated successfully.', 'type' => 'success'];
     } else {
-        $stmt = $pdo->prepare("INSERT INTO tours (type, title, location, hero_image, price, price_single, price_group_small, duration, timing, languages, availability, overview, excludes_html, brings_html, itinerary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$type, $title, $location, $hero_image, $price, $price_single, $price_group_small, $duration, $timing, $languages, $availability, $overview, $excludes_html, $brings_html, $itinerary]);
+        $stmt = $pdo->prepare("INSERT INTO tours (type, title, location, hero_image, price, price_single, price_group_small, duration, timing, languages, availability, overview, includes_html, excludes_html, brings_html, itinerary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$type, $title, $location, $hero_image, $price, $price_single, $price_group_small, $duration, $timing, $languages, $availability, $overview, $includes_html, $excludes_html, $brings_html, $itinerary]);
         $_SESSION['toast'] = ['title' => 'Tour Created', 'message' => 'New tour has been published.', 'type' => 'success'];
     }
 
@@ -85,22 +113,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:20px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px;">
             <div class="form-group">
                 <label class="form-label">Location *</label>
                 <input type="text" name="location" class="form-control" value="<?= htmlspecialchars($tour['location']) ?>" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Base Price ($) *</label>
-                <input type="number" step="0.01" name="price" class="form-control" value="<?= htmlspecialchars($tour['price']) ?>" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Single Person Price ($)</label>
                 <input type="number" step="0.01" name="price_single" class="form-control" value="<?= htmlspecialchars($tour['price_single']) ?>">
             </div>
             <div class="form-group">
-                <label class="form-label">Group (2-3) Price ($)</label>
-                <input type="number" step="0.01" name="price_group_small" class="form-control" value="<?= htmlspecialchars($tour['price_group_small']) ?>">
+                <label class="form-label">Group (2-3) Price ($) per person *</label>
+                <input type="number" step="0.01" name="price_group_small" class="form-control" value="<?= htmlspecialchars($tour['price_group_small']) ?>" required>
             </div>
         </div>
 
@@ -128,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="form-group">
             <label class="form-label">Hero Cover Image (Upload File)</label>
-            <input type="file" name="hero_image" class="form-control" accept="image/*" <?= $is_edit ? '' : 'required' ?>>
+            <input type="file" name="hero_image" class="form-control" accept="image/jpeg, image/png, image/webp, image/gif" <?= $is_edit ? '' : 'required' ?>>
             <?php if($tour['hero_image']): ?>
                 <img src="<?= get_image_url($tour['hero_image'], 'tour') ?>" style="height:80px; border-radius:8px; margin-top:10px;" alt="">
             <?php endif; ?>
@@ -141,13 +165,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
             <div class="form-group">
+                <label class="form-label">Included List (Rich Text)</label>
+                <textarea name="includes_html" class="form-control rich-editor"><?= htmlspecialchars($tour['includes_html'] ?? '') ?></textarea>
+            </div>
+            <div class="form-group">
                 <label class="form-label">Excludes List (Rich Text)</label>
                 <textarea name="excludes_html" class="form-control rich-editor"><?= htmlspecialchars($tour['excludes_html']) ?></textarea>
             </div>
-            <div class="form-group">
-                <label class="form-label">What to Bring List (Rich Text)</label>
-                <textarea name="brings_html" class="form-control rich-editor"><?= htmlspecialchars($tour['brings_html']) ?></textarea>
-            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">What to Bring List (Rich Text)</label>
+            <textarea name="brings_html" class="form-control rich-editor"><?= htmlspecialchars($tour['brings_html']) ?></textarea>
         </div>
 
         <div class="form-group">
