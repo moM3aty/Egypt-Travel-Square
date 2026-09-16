@@ -40,14 +40,16 @@ include 'includes/header.php';
 
     body { background-color: var(--off-white); color: var(--text-dark); }
 
-    /* ===================== HERO SECTION ===================== */
-    .home-hero { position: relative; height: 100vh; min-height: 750px; display: flex; align-items: center; justify-content: center; text-align: center; }
-    .home-hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden;}
-    .home-hero-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); animation: zoomEffect 20s infinite alternate ease-in-out; }
-    @keyframes zoomEffect { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-    .home-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,22,40,0.3) 0%, rgba(10,22,40,0.3) 50%, rgba(10,22,40,0.3) 100%); z-index: 1; }
+    /* ===================== HERO SLIDER SECTION ===================== */
+    .home-hero { position: relative; height: 100vh; min-height: 750px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; margin: 0; }
     
-    .home-hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; animation: fadeInUp 1s ease both; margin-top: -60px; }
+    .hero-slider-container { position: absolute; inset: 0; z-index: 0; }
+    .hero-slider-container .swiper-slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); transform: scale(1.05); transition: transform 6s linear; }
+    .hero-slider-container .swiper-slide-active img { transform: scale(1); } /* Animation effect on active slide */
+
+    .home-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,22,40,0.8) 0%, rgba(10,22,40,0.3) 50%, rgba(10,22,40,0.9) 100%); z-index: 1; pointer-events: none;}
+    
+    .home-hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; animation: fadeInUp 1s ease both; margin-top: -60px; pointer-events: auto;}
     
     .hero-badge { display: inline-block; font-size: 13px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--logo-gold); margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 15px;}
     .hero-badge::before, .hero-badge::after { content: ''; width: 40px; height: 1px; background: var(--logo-gold); }
@@ -64,7 +66,12 @@ include 'includes/header.php';
     .btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 35px; border: 2px solid rgba(255,255,255,0.4); color: var(--pure-white); font-weight: 600; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; transition: var(--transition); border-radius: 4px; }
     .btn-outline:hover { border-color: var(--logo-gold); color: var(--logo-gold); }
 
-    /* ===================== FLOATING FEATURES (FIXED ICONS) ===================== */
+    .scroll-indicator { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 15px; color: rgba(255,255,255,0.6); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; }
+    .scroll-line { width: 1px; height: 60px; background: rgba(255,255,255,0.2); position: relative; overflow: hidden; }
+    .scroll-line::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%; background: var(--logo-gold); animation: scrollLine 2s infinite ease-in-out; }
+    @keyframes scrollLine { 0% { transform: translateY(-100%); } 100% { transform: translateY(200%); } }
+
+    /* ===================== FLOATING FEATURES ===================== */
     .features-wrapper { position: relative; margin-top: -60px; z-index: 10; padding: 0 20px; }
     .features-banner { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); background: var(--logo-navy); max-width: 1100px; margin: 0 auto; box-shadow: var(--shadow-elegant); border-radius: 8px; border-bottom: 3px solid var(--logo-gold); }
     .feature-item { padding: 35px 20px; text-align: center; color: var(--pure-white); border-right: 1px solid rgba(255,255,255,0.05); transition: var(--transition); }
@@ -81,7 +88,7 @@ include 'includes/header.php';
     .section-header h2 span { color: var(--logo-gold); font-style: italic; font-weight: 400;}
     .section-header p { font-size: 16px; color: var(--text-gray); line-height: 1.8; }
 
-    /* ===================== ABOUT & SLIDER (EDITORIAL STYLE) ===================== */
+    /* ===================== ABOUT & SLIDER ===================== */
     .split-section { padding: 120px 0; background: var(--pure-white); }
     .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
     .split-text h2 { font-family: var(--font-display); font-size: clamp(40px, 4vw, 55px); color: var(--logo-navy); margin-bottom: 25px; line-height: 1.1; font-weight: 700; }
@@ -90,8 +97,8 @@ include 'includes/header.php';
     
     .split-slider-wrapper { position: relative; padding: 20px 20px 0 0; }
     .split-slider-wrapper::before { content: ''; position: absolute; top: 0; right: 0; width: 80%; height: 80%; border: 2px solid var(--logo-gold); border-radius: 8px; z-index: 0; }
-    .swiper-container { width: 100%; height: 500px; border-radius: 8px; box-shadow: var(--shadow-elegant); z-index: 2; position: relative; }
-    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .aboutSwiper { width: 100%; height: 500px; border-radius: 8px; box-shadow: var(--shadow-elegant); z-index: 2; position: relative; overflow: hidden; }
+    .aboutSwiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
     
     .slider-nav { display: flex; gap: 10px; position: absolute; bottom: 20px; right: 20px; z-index: 10; }
     .slider-btn { width: 45px; height: 45px; background: var(--logo-navy); color: var(--logo-gold); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); border-radius: 4px; }
@@ -113,7 +120,7 @@ include 'includes/header.php';
     .dest-cta { font-size: 12px; font-weight: 700; color: var(--logo-gold); text-transform: uppercase; letter-spacing: 2px; opacity: 0; transition: var(--transition); display: inline-block;}
     .dest-card:hover .dest-cta { opacity: 1; }
 
-    /* ===================== TOURS CARDS (ELEGANT) ===================== */
+    /* ===================== TOURS CARDS ===================== */
     .tours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 35px; }
     .tour-card { background: var(--pure-white); border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: var(--transition); display: flex; flex-direction: column; border: 1px solid #EEEEEE; border-bottom: 3px solid transparent;}
     .tour-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-elegant); border-bottom-color: var(--logo-gold); }
@@ -122,13 +129,14 @@ include 'includes/header.php';
     .tour-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
     .tour-card:hover .tour-image img { transform: scale(1.08); }
     
-    /* Fixed Wishlist Heart Icon */
-
+    .tour-wishlist { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ccc; cursor: pointer; transition: var(--transition); }
+    .tour-wishlist:hover { color: #E74C3C; }
+    
     .tour-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
     .tour-location { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
     .tour-location i { color: var(--logo-gold); font-size: 14px;}
     
-    .tour-name { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--logo-navy); margin-bottom: 20px; line-height: 1.3; transition: color 0.3s ease; }
+    .tour-name { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--logo-navy); margin-bottom: 20px; line-height: 1.3; transition: color 0.3s ease; text-decoration: none; }
     .tour-card:hover .tour-name { color: var(--logo-gold); }
     
     .tour-meta { display: flex; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid #EEEEEE; margin-bottom: 20px; }
@@ -152,7 +160,6 @@ include 'includes/header.php';
     .play-btn { width: 80px; height: 80px; background: rgba(201,162,39,0.2); border: 2px solid var(--logo-gold); color: var(--logo-gold); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: var(--transition); padding-left: 5px; margin: 0 auto;}
     .play-btn:hover { background: var(--logo-gold); color: var(--logo-navy); transform: scale(1.1); }
 
-    /* Video Modal */
     .vid-modal { position: fixed; inset: 0; background: rgba(10,22,40,0.95); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.4s ease; }
     .vid-modal.active { opacity: 1; pointer-events: auto; }
     .vid-modal video { max-width: 90%; max-height: 80vh; border: 2px solid var(--logo-gold); border-radius: 8px; outline: none; }
@@ -178,7 +185,6 @@ include 'includes/header.php';
     .cta-content h2 { font-size: clamp(32px, 5vw, 50px); margin-bottom: 20px; font-family: var(--font-display); font-weight: 700; }
     .cta-content p { font-size: 16px; margin-bottom: 40px; color: rgba(255,255,255,0.8); font-weight: 300; max-width: 600px; margin-inline: auto;}
 
-    /* ===================== RESPONSIVE ===================== */
     @media (max-width: 1200px) { .dest-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 991px) { 
         .features-banner { grid-template-columns: 1fr; } 
@@ -197,12 +203,25 @@ include 'includes/header.php';
     }
 </style>
 
-<!-- ===================== LUXURY HERO ===================== -->
+<!-- ===================== LUXURY HERO SLIDER ===================== -->
 <section class="home-hero">
-    <div class="home-hero-bg">
-        <img src="<?= get_image_url($settings['home_hero_bg'] ?? '', 'placeholder') ?>" alt="Egypt Travel Square">
+    <div class="hero-slider-container swiper-container heroSwiper">
+        <div class="swiper-wrapper">
+            <?php 
+            $hero_json = $settings['home_hero_slider_images'] ?? '[]';
+            $hero_imgs = json_decode($hero_json, true);
+            if(is_array($hero_imgs) && !empty($hero_imgs)) {
+                foreach($hero_imgs as $s_img) {
+                    echo '<div class="swiper-slide"><img src="'.get_image_url($s_img, 'placeholder').'" alt="Egypt Background"></div>';
+                }
+            } else {
+                echo '<div class="swiper-slide"><img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?q=80&w=2000&auto=format&fit=crop" alt="Fallback"></div>';
+            }
+            ?>
+        </div>
     </div>
     <div class="home-hero-overlay"></div>
+    
     <div class="container">
         <div class="home-hero-content">
             <span class="hero-badge">Welcome to Egypt</span>
@@ -222,12 +241,16 @@ include 'includes/header.php';
             </div>
         </div>
     </div>
+    
+    <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
 </section>
 
 <!-- ===================== FIXED FLOATING FEATURES ===================== -->
 <div class="features-wrapper">
     <div class="features-banner reveal">
-        <!-- تم تعديل الأيقونات لتكون مجانية ومضمونة 100% -->
         <div class="feature-item">
             <i class="fa-solid fa-certificate"></i>
             <span>Best Price Guarantee</span>
@@ -274,25 +297,20 @@ include 'includes/header.php';
             </div>
 
             <div class="split-slider-wrapper reveal">
-                <div class="swiper-container mySwiper">
+                <div class="swiper-container aboutSwiper">
                     <div class="swiper-wrapper">
                         <?php 
-                        $slider_json = $settings['home_slider_images'] ?? '';
-                        if ($slider_json) {
-                            $slider_imgs = json_decode($slider_json, true);
-                            if(is_array($slider_imgs) && !empty($slider_imgs)) {
-                                foreach($slider_imgs as $s_img) {
-                                    echo '<div class="swiper-slide"><img src="'.get_image_url($s_img, 'placeholder').'" alt="Egypt Travel"></div>';
-                                }
-                            } else {
-                                echo '<div class="swiper-slide"><img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?q=80&w=1000&auto=format&fit=crop" alt="Placeholder"></div>';
+                        $about_json = $settings['home_about_slider_images'] ?? '[]';
+                        $about_imgs = json_decode($about_json, true);
+                        if(is_array($about_imgs) && !empty($about_imgs)) {
+                            foreach($about_imgs as $s_img) {
+                                echo '<div class="swiper-slide"><img src="'.get_image_url($s_img, 'placeholder').'" alt="Egypt Travel"></div>';
                             }
                         } else {
                             echo '<div class="swiper-slide"><img src="https://images.unsplash.com/photo-1539650116574-8efeb43e2750?q=80&w=1000&auto=format&fit=crop" alt="Placeholder"></div>';
                         }
                         ?>
                     </div>
-                    <!-- Custom Navigation -->
                     <div class="slider-nav">
                         <div class="slider-btn swiper-prev-custom"><i class="fa-solid fa-chevron-left"></i></div>
                         <div class="slider-btn swiper-next-custom"><i class="fa-solid fa-chevron-right"></i></div>
@@ -347,6 +365,7 @@ include 'includes/header.php';
             <div class="tour-card reveal">
                 <a href="tour.php?id=<?= $tour['id'] ?>" class="tour-image">
                     <img src="<?= get_image_url($tour['hero_image'], 'tour') ?>" alt="<?= htmlspecialchars($tour['title']) ?>">
+                    <div class="tour-wishlist"><i class="fa-regular fa-heart"></i></div>
                 </a>
                 <div class="tour-body">
                     <div class="tour-location"><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($tour['location']) ?></div>
@@ -444,7 +463,7 @@ include 'includes/header.php';
     <div class="cta-bg">
         <img src="<?= get_image_url($settings['home_cta_bg'] ?? '', 'placeholder') ?>" alt="Luxor Scene">
     </div>
-    <div class="home-hero-overlay"></div> <!-- استخدام نفس شفافية الهيرو للفخامة -->
+    <div class="home-hero-overlay"></div>
     <div class="container">
         <div class="cta-content">
             <h2>Ready for an Unforgettable Journey?</h2>
@@ -459,7 +478,21 @@ include 'includes/header.php';
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    var swiper = new Swiper(".mySwiper", {
+    // سلايدر الهيرو (تلاشي بطيء للصور في الخلفية)
+    var heroSwiper = new Swiper(".heroSwiper", {
+        loop: true,
+        speed: 1500, // سرعة حركة التلاشي
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        effect: "fade",
+        fadeEffect: { crossFade: true },
+        allowTouchMove: false // منع سحب صور الخلفية باليد
+    });
+
+    // سلايدر النبذة (عن الشركة)
+    var aboutSwiper = new Swiper(".aboutSwiper", {
         loop: true,
         speed: 800,
         autoplay: {

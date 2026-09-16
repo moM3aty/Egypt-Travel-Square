@@ -23,7 +23,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// جلب اللوجو الافتراضي من الإعدادات لعرضه في السايدبار
 $stmt_logo = $pdo->query("SELECT setting_value FROM settings WHERE setting_key = 'default_logo'");
 $admin_logo_path = $stmt_logo->fetchColumn();
 $admin_logo_url = get_image_url($admin_logo_path, 'logo');
@@ -54,7 +53,6 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
           });
       });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -78,7 +76,7 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
         .sidebar-brand { padding: 25px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .sidebar-brand img { width: 200px; border-radius: 30px; background: rgba(255,255,255,0.05); padding: 8px; }
         .sidebar-menu { padding: 20px 0; overflow-y: auto; flex-grow: 1; }
-        .sidebar-menu a { display: flex; align-items: center; gap: 15px; padding: 16px 28px; color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; font-size: 14.5px; transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 15px; padding: 14px 28px; color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 500; font-size: 14.5px; transition: all 0.3s ease; border-left: 4px solid transparent; }
         .sidebar-menu a:hover { color: var(--white); background: rgba(255,255,255,0.03); }
         .sidebar-menu a.active { color: var(--gold); background: rgba(201,162,39,0.08); border-left-color: var(--gold); font-weight: 700; }
         .sidebar-menu i { font-size: 18px; width: 22px; text-align: center; }
@@ -139,6 +137,9 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
             <a href="tours.php" class="<?= in_array($current_page, ['tours.php', 'tour_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-map-location-dot"></i> Tours & Packages</a>
             <a href="destinations.php" class="<?= in_array($current_page, ['destinations.php', 'destination_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-city"></i> Destinations</a>
             <a href="attractions.php" class="<?= in_array($current_page, ['attractions.php', 'attraction_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-landmark"></i> Attractions</a>
+            
+            <a href="sliders.php" class="<?= $current_page == 'sliders.php' ? 'active' : '' ?>"><i class="fa-solid fa-layer-group"></i> Home Sliders</a>
+            
             <a href="gallery.php" class="<?= in_array($current_page, ['gallery.php', 'gallery_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-images"></i> Gallery</a>
             <a href="videos.php" class="<?= in_array($current_page, ['videos.php', 'video_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-video"></i> Videos</a>
             <a href="reviews.php" class="<?= $current_page == 'reviews.php' ? 'active' : '' ?>"><i class="fa-solid fa-star"></i> Guest Reviews</a>
@@ -156,7 +157,6 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
     </aside>
 
     <main class="main-content">
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('a.btn-danger').forEach(button => {
@@ -177,9 +177,7 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
                             cancelButtonColor: '#0A1628',
                             confirmButtonText: '<i class="fa-solid fa-trash"></i> Yes, delete it!'
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = link;
-                            }
+                            if (result.isConfirmed) { window.location.href = link; }
                         });
                     });
                 }
@@ -193,47 +191,30 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
                 if($t_type == 'danger') $t_type = 'error';
                 ?>
                 const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 4000,
                     timerProgressBar: true,
                     didOpen: (toast) => {
                         toast.addEventListener('mouseenter', Swal.stopTimer)
                         toast.addEventListener('mouseleave', Swal.resumeTimer)
                     }
                 });
-                Toast.fire({
-                    icon: '<?= $t_type ?>',
-                    title: '<?= $t_title ?>',
-                    text: '<?= $t_msg ?>'
-                });
+                Toast.fire({ icon: '<?= $t_type ?>', title: '<?= $t_title ?>', text: '<?= $t_msg ?>' });
                 <?php unset($_SESSION['toast']); ?>
             <?php endif; ?>
         });
-        // نظام التحميل الذكي عند رفع الملفات (Smart Loading Spinner)
-document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', function() {
-        // التحقق إذا كان الفورم يحتوي على ملفات يتم رفعها
-        let hasFiles = false;
-        const fileInputs = form.querySelectorAll('input[type="file"]');
-        fileInputs.forEach(input => {
-            if(input.files.length > 0) hasFiles = true;
-        });
 
-        // إذا كان هناك ملف يتم رفعه، أظهر شاشة التحميل
-        if(hasFiles) {
-            Swal.fire({
-                title: 'Uploading Data...',
-                html: 'Please wait while your files are being securely uploaded to the server.<br><br><b>Do not close this window.</b>',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                let hasFiles = false;
+                form.querySelectorAll('input[type="file"]').forEach(input => { if(input.files.length > 0) hasFiles = true; });
+                if(hasFiles) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        html: 'Please wait while your files are being uploaded.<br><b>Do not close this window.</b>',
+                        allowOutsideClick: false, showConfirmButton: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
                 }
             });
-        }
-    });
-});
+        });
     </script>
