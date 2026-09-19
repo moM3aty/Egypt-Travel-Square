@@ -45,7 +45,7 @@ include 'includes/header.php';
     
     .hero-slider-container { position: absolute; inset: 0; z-index: 0; }
     .hero-slider-container .swiper-slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); transform: scale(1.05); transition: transform 6s linear; }
-    .hero-slider-container .swiper-slide-active img { transform: scale(1); } /* Animation effect on active slide */
+    .hero-slider-container .swiper-slide-active img { transform: scale(1); }
 
     .home-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,22,40,0.8) 0%, rgba(10,22,40,0.3) 50%, rgba(10,22,40,0.9) 100%); z-index: 1; pointer-events: none;}
     
@@ -88,20 +88,23 @@ include 'includes/header.php';
     .section-header h2 span { color: var(--logo-gold); font-style: italic; font-weight: 400;}
     .section-header p { font-size: 16px; color: var(--text-gray); line-height: 1.8; }
 
-    /* ===================== ABOUT & SLIDER ===================== */
-    .split-section { padding: 120px 0; background: var(--pure-white); }
-    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    /* ===================== ABOUT & SLIDER (EDITORIAL 1/3 - 2/3) ===================== */
+    .split-section { padding: 120px 0; background: var(--pure-white); overflow: hidden; }
+    .split-grid { display: flex; align-items: center; justify-content: space-between; gap: 50px; flex-wrap: wrap; }
+    
+    .split-text { width: 35%; flex-shrink: 0; }
     .split-text h2 { font-family: var(--font-display); font-size: clamp(40px, 4vw, 55px); color: var(--logo-navy); margin-bottom: 25px; line-height: 1.1; font-weight: 700; }
     .split-text h2 span { color: var(--logo-gold); font-style: italic; font-weight: 400; }
-    .split-text .rich-content { font-size: 16px; color: var(--text-gray); line-height: 2; margin-bottom: 40px; border-left: 2px solid var(--logo-gold); padding-left: 20px; }
+    .split-text .rich-content { font-size: 16px; color: var(--text-gray); line-height: 2; margin-bottom: 40px; border-left: 3px solid var(--logo-gold); padding-left: 20px; }
     
-    .split-slider-wrapper { position: relative; padding: 20px 20px 0 0; }
-    .split-slider-wrapper::before { content: ''; position: absolute; top: 0; right: 0; width: 80%; height: 80%; border: 2px solid var(--logo-gold); border-radius: 8px; z-index: 0; }
-    .aboutSwiper { width: 100%; height: 500px; border-radius: 8px; box-shadow: var(--shadow-elegant); z-index: 2; position: relative; overflow: hidden; }
-    .aboutSwiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+    .split-slider-wrapper { width: 58%; position: relative; padding: 25px 25px 0 0;}
+    .split-slider-wrapper::before { content: ''; position: absolute; top: 0; right: 0; width: 100%; height: 100%; border: 2px solid var(--logo-gold); border-radius: 8px; z-index: 0; }
+    .swiper-slide { margin:auto; display:flex; justify-content:center; align-items:center;}
+    .aboutSwiper { width: 100%; height: 650px; border-radius: 8px; box-shadow: 0 25px 50px rgba(10, 22, 40, 0.15); z-index: 2; position: relative; background: var(--off-white); }
+    .aboutSwiper .swiper-slide img { width: 100%; }
     
-    .slider-nav { display: flex; gap: 10px; position: absolute; bottom: 20px; right: 20px; z-index: 10; }
-    .slider-btn { width: 45px; height: 45px; background: var(--logo-navy); color: var(--logo-gold); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); border-radius: 4px; }
+    .slider-nav { display: flex; gap: 10px; position: absolute; bottom: 25px; right: 25px; z-index: 10; }
+    .slider-btn { width: 50px; height: 50px; background: var(--logo-navy); color: var(--logo-gold); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-size: 18px;}
     .slider-btn:hover { background: var(--logo-gold); color: var(--logo-navy); }
 
     /* ===================== DESTINATIONS ===================== */
@@ -186,14 +189,17 @@ include 'includes/header.php';
     .cta-content p { font-size: 16px; margin-bottom: 40px; color: rgba(255,255,255,0.8); font-weight: 300; max-width: 600px; margin-inline: auto;}
 
     @media (max-width: 1200px) { .dest-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 1100px) {
+        .split-grid { flex-direction: column; gap: 50px; }
+        .split-text, .split-slider-wrapper { width: 100%; }
+        .aboutSwiper { height: 450px; }
+        .split-slider-wrapper { padding: 0; }
+        .split-slider-wrapper::before { display: none; }
+    }
     @media (max-width: 991px) { 
         .features-banner { grid-template-columns: 1fr; } 
         .feature-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .feature-item:last-child { border-bottom: none; }
-        .split-grid { grid-template-columns: 1fr; gap: 50px;}
-        .split-slider-wrapper { padding: 0; }
-        .split-slider-wrapper::before { display: none; }
-        .swiper-container { height: 400px; }
     }
     @media (max-width: 767px) {
         .dest-grid { grid-template-columns: 1fr; }
@@ -296,6 +302,7 @@ include 'includes/header.php';
                 <?php endif; ?>
             </div>
 
+            <!-- المقاسات الجديدة لتغطية المساحة بجمالية عالية -->
             <div class="split-slider-wrapper reveal">
                 <div class="swiper-container aboutSwiper">
                     <div class="swiper-wrapper">
@@ -407,7 +414,6 @@ include 'includes/header.php';
     </div>
 </section>
 
-<!-- Video Modal -->
 <div class="vid-modal" id="vidModal">
     <div class="vid-close" onclick="closeVideoModal()"><i class="fa-solid fa-xmark"></i></div>
     <video id="promoVideo" controls>
@@ -478,33 +484,18 @@ include 'includes/header.php';
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-    // سلايدر الهيرو (تلاشي بطيء للصور في الخلفية)
     var heroSwiper = new Swiper(".heroSwiper", {
-        loop: true,
-        speed: 1500, // سرعة حركة التلاشي
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-        effect: "fade",
-        fadeEffect: { crossFade: true },
-        allowTouchMove: false // منع سحب صور الخلفية باليد
+        loop: true, speed: 1500,
+        autoplay: { delay: 4000, disableOnInteraction: false },
+        effect: "fade", fadeEffect: { crossFade: true },
+        allowTouchMove: false
     });
 
-    // سلايدر النبذة (عن الشركة)
     var aboutSwiper = new Swiper(".aboutSwiper", {
-        loop: true,
-        speed: 800,
-        autoplay: {
-            delay: 4000,
-            disableOnInteraction: false,
-        },
-        navigation: {
-            nextEl: ".swiper-next-custom",
-            prevEl: ".swiper-prev-custom",
-        },
-        effect: "fade",
-        fadeEffect: { crossFade: true }
+        loop: true, speed: 800,
+        autoplay: { delay: 4000, disableOnInteraction: false },
+        navigation: { nextEl: ".swiper-next-custom", prevEl: ".swiper-prev-custom" },
+        effect: "fade", fadeEffect: { crossFade: true }
     });
 
     function openVideoModal() {

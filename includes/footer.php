@@ -5,12 +5,14 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.php" class="logo">
+          <a href="index.php" class="logo" style="display:inline-block; margin-bottom:15px;">
             <?php if(!empty($global_settings['default_logo'])): ?>
-                <img src="<?= $site_logo ?>" alt="Egypt Travel Square" style="height: 75px; border-radius: 30px;">
+                <img src="<?= $site_logo ?>" alt="Egypt Travel Square" style="height: 70px; border-radius: 8px;">
             <?php else: ?>
-                <div class="logo-icon"><i class="fa-solid fa-ankh"></i></div>
-                <span class="logo-text">Egypt<span>Travel</span>Square</span>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="logo-icon" style="width:40px; height:40px; background:var(--logo-gold); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--logo-navy); font-size:18px;"><i class="fa-solid fa-ankh"></i></div>
+                    <span class="logo-text" style="color:var(--pure-white); font-family:var(--font-display); font-size:20px; font-weight:700;">Egypt<span style="color:var(--logo-gold);">Travel</span>Square</span>
+                </div>
             <?php endif; ?>
           </a>
           <p>Your trusted partner for extraordinary Egyptian adventures. With expert guides, luxury accommodations, and exclusive experiences, we transform travel dreams into reality.</p>
@@ -73,7 +75,7 @@
     </div>
   </footer>
 
-  <!-- أزرار الواتساب والتقييمات العائمة (على اليسار) -->
+  <!-- الأزرار العائمة (تقييمات و واتساب) -->
   <a href="reviews.php" class="floating-btn reviews-btn" title="Guest Reviews">
     <i class="fa-solid fa-star"></i>
   </a>
@@ -142,37 +144,38 @@
       window.addEventListener('scroll', revealOnScroll, {passive:true}); 
       revealOnScroll();
     })();
+
+    // WhatsApp Function
+    function sendToWhatsApp(e, itemName) {
+        e.preventDefault();
+        const form = e.target;
+        const name = form.name ? form.name.value : '';
+        const email = form.email ? form.email.value : '';
+        const msg = form.msg ? form.msg.value : '';
+        const phone = "<?= preg_replace('/[^0-9]/', '', $global_settings['phone'] ?? '201006796511') ?>";
+        const text = `Hello Egypt Travel Square! 🌟%0A%0A` + 
+                     `I would like to book/inquire about:%0A` + 
+                     `*${itemName}*%0A%0A` + 
+                     `*Name:* ${name}%0A` + 
+                     `*Email:* ${email}%0A` + 
+                     `*Message Details:* ${msg}`;
+        window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+    }
   </script>
 
-  <!--Start of Tawk.to Script-->
-  <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/5dd51f20d96992700fc85857/default';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-    
-  </script>
- <!--Start of Tawk.to Script-->
+  <!--Start of Tawk.to Script (Cleaned & Tracked)-->
   <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     
-    // --- الكود الجديد لتتبع الصفحات والرحلات وإرسالها للتطبيق ---
+    // Track Visitors on Tours/Destinations
     Tawk_API.onLoad = function() {
-        // جلب اسم الصفحة أو الرحلة (مع إزالة اسم الموقع ليكون الاسم قصيراً وواضحاً في التطبيق)
         var pageName = "<?= isset($pageTitle) ? addslashes(str_replace(' | Egypt Travel Square', '', $pageTitle)) : 'Home Page' ?>";
         var pageUrl = window.location.href;
 
-        // 1. إضافة مسار الزائر كـ Attribute ليظهر أمامك في بيانات الزائر في التطبيق
         Tawk_API.setAttributes({
             'Currently Viewing': pageName
         }, function (error) {});
 
-        // 2. إرسال حدث (Event) للتطبيق عند فتح رحلة أو باقة
         if(pageUrl.indexOf('tour.php') !== -1 || pageUrl.indexOf('destination.php') !== -1) {
             Tawk_API.addEvent('Viewed_Tour', {
                 'Tour Name': pageName,
@@ -180,7 +183,6 @@
             });
         }
     };
-    // -------------------------------------------------------------
 
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
@@ -192,5 +194,6 @@
     })();
   </script>
   <!--End of Tawk.to Script-->
+
 </body>
 </html>
