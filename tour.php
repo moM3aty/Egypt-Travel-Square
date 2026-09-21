@@ -17,39 +17,47 @@ include 'includes/header.php';
 ?>
 
 <style>
-    /* TOUR SPECIFIC CSS */
+    /* ===================== LUXURY TOUR DETAILS STYLE ===================== */
     .tour-layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding: 80px 0; align-items: start; }
-    .content-box { background: var(--white); padding: 40px; border-radius: 24px; box-shadow: var(--shadow-soft); margin-bottom: 40px; }
-    .section-title { font-size: 28px; color: var(--navy); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 16px; } 
-    .section-title i { font-size: 24px; }
-    .tour-text { font-size: 16px; color: var(--text-muted); line-height: 1.9; margin-bottom: 24px; }
+    
+    .content-box { background: var(--pure-white); padding: 40px; border-radius: 8px; box-shadow: var(--shadow-elegant); margin-bottom: 40px; border-top: 3px solid var(--logo-gold); }
+    .section-title { font-family: var(--font-display); font-size: 32px; color: var(--logo-navy); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 16px; font-weight: 700;} 
+    .section-title i { color: var(--logo-gold); font-size: 24px; }
+    .tour-text { font-size: 16px; color: var(--text-gray); line-height: 1.9; margin-bottom: 24px; }
     
     .price-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin: 30px 0; }
-    .price-card { background: var(--sand); border: 1px solid var(--gold-light); border-radius: 16px; padding: 15px; text-align: center; } 
-    .price-card h4 { font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; } 
-    .price-card p { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--navy); }
+    .price-card { background: var(--off-white); border: 1px solid rgba(201,162,39,0.3); border-radius: 8px; padding: 15px; text-align: center; transition: transform 0.3s ease; display:flex; flex-direction:column; justify-content:center;} 
+    .price-card:hover { transform: translateY(-5px); border-color: var(--logo-gold); box-shadow: var(--shadow-elegant);} 
+    .price-card h4 { font-size: 14px; color: var(--text-gray); text-transform: uppercase; margin-bottom: 8px; font-weight: 600;} 
+    .price-card p { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--logo-navy); margin: 0; }
     
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; } 
     .info-item { display: flex; gap: 16px; align-items: flex-start; } 
-    .info-item > i { font-size: 24px; color: var(--gold); margin-top: 4px; } 
-    .info-item h5 { font-size: 16px; color: var(--navy); margin-bottom: 4px; } 
-    .info-item p { font-size: 14px; color: var(--text-muted); }
+    .info-item > i { font-size: 24px; color: var(--logo-gold); margin-top: 4px; } 
+    .info-item h5 { font-family: var(--font-display); font-size: 22px; color: var(--logo-navy); margin-bottom: 4px; font-weight: 700;} 
+    .info-item p { font-size: 14px; color: var(--text-gray); }
     
-    /* Lists Styling */
-    .dual-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;} 
-    .styled-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; } 
-    .styled-list.include li i { color: #28a745; margin-top: 4px; } /* Green check */
-    .styled-list.exclude li i { color: var(--terracotta); margin-top: 4px; } /* Red cross */
-    .styled-list.bring li i { color: var(--turquoise); margin-top: 4px; } /* Turquoise suitcase */
+    .dual-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; } 
+    .styled-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--text-gray); margin-bottom: 12px; line-height: 1.6;} 
+    .styled-list.include li i { color: #28a745; margin-top: 4px; }
+    .styled-list.exclude li i { color: #E74C3C; margin-top: 4px;} 
+    .styled-list.bring li i { color: #1ABC9C; margin-top: 4px;}
     
-    .booking-widget { background: var(--white); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-medium); position: sticky; top: 100px; border-top: 6px solid var(--gold); }
-    .booking-form input, .booking-form textarea { width: 100%; padding: 14px; background: var(--sand); border: 1px solid transparent; border-radius: 12px; margin-bottom: 16px;}
-    .btn-book { width: 100%; padding: 16px; background: #25D366; color: var(--white); border: none; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer; }
+    .booking-widget { background: var(--logo-navy); border-radius: 8px; padding: 32px; box-shadow: var(--shadow-elegant); position: sticky; top: 100px; border-bottom: 4px solid var(--logo-gold); color: var(--pure-white);}
+    .booking-header { margin-bottom: 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;} 
+    .booking-header h3 { font-family: var(--font-display); font-size: 28px; color: var(--logo-gold); margin-bottom: 8px; font-weight: 700;} 
+    .booking-header .price { font-size: 14px; color: rgba(255,255,255,0.7); text-transform: uppercase; } 
+    .booking-header .price span { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--pure-white); display: block; text-transform: none; }
     
-    @media (max-width: 991px) { 
-        .tour-layout { grid-template-columns: 1fr; } 
-        .dual-lists { grid-template-columns: 1fr; }
-    }
+    .booking-form .form-group { margin-bottom: 16px; } 
+    .booking-form input, .booking-form textarea { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-family: var(--font-body); font-size: 14px; outline: none; transition: 0.3s; color: var(--pure-white);} 
+    .booking-form input:focus, .booking-form textarea:focus { background: rgba(255,255,255,0.1); border-color: var(--logo-gold); }
+    .booking-form input::placeholder, .booking-form textarea::placeholder { color: rgba(255,255,255,0.5); }
+    
+    .btn-book { width: 100%; padding: 16px; background: var(--logo-gold); color: var(--logo-navy); border: none; border-radius: 4px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;} 
+    .btn-book:hover { background: var(--pure-white); transform: translateY(-3px); } 
+    
+    @media (max-width: 991px) { .tour-layout { grid-template-columns: 1fr; } .dual-lists{grid-template-columns: 1fr;} }
 </style>
 
 <section class="page-hero">
@@ -61,24 +69,23 @@ include 'includes/header.php';
       <div class="page-hero-content">
         <div class="breadcrumb"><a href="index.php">Home</a> <i class="fa-solid fa-circle"></i> <a href="tours.php">Tours</a> <i class="fa-solid fa-circle"></i> <span>Details</span></div>
         <h1 class="page-hero-title"><?= htmlspecialchars($tour['title']) ?></h1>
-        <div class="tour-hero-price">From <span>$<?= htmlspecialchars($tour['price']) ?></span></div>
       </div>
     </div>
 </section>
 
-<section class="tour-details-section">
+<section style="background: var(--off-white);">
   <div class="container tour-layout">
     
     <div class="tour-main-content">
       
       <!-- Overview -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-file-lines" style="color: var(--gold);"></i> Tour Details</h2>
+        <h2 class="section-title"><i class="fa-solid fa-file-lines"></i> Tour Details</h2>
         <div class="tour-text">
           <?= html_entity_decode($tour['overview']) ?>
         </div>
         
-        <h3 style="color: var(--navy); margin-bottom: 16px;">Price per Person</h3>
+        <h3 style="color: var(--logo-navy); margin-bottom: 16px; font-family: var(--font-display); font-weight: 700; font-size: 24px;">Price per Person</h3>
         <div class="price-cards">
           <div class="price-card"><h4>Single</h4><p>$<?= htmlspecialchars($tour['price_single']) ?></p></div>
           <div class="price-card"><h4>2-3 Persons</h4><p>$<?= htmlspecialchars($tour['price_group_small']) ?></p></div>
@@ -87,7 +94,7 @@ include 'includes/header.php';
 
       <!-- Info -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-circle-info" style="color: var(--gold);"></i> Important Information</h2>
+        <h2 class="section-title"><i class="fa-solid fa-circle-info"></i> Important Information</h2>
         <div class="info-grid">
           <div class="info-item"><i class="fa-solid fa-language"></i><div><h5>Languages</h5><p><?= htmlspecialchars($tour['languages']) ?></p></div></div>
           <div class="info-item"><i class="fa-solid fa-calendar-check"></i><div><h5>Availability</h5><p><?= htmlspecialchars($tour['availability']) ?></p></div></div>
@@ -102,19 +109,19 @@ include 'includes/header.php';
           <div>
             <h2 class="section-title"><i class="fa-solid fa-circle-check" style="color:#28a745;"></i> Included</h2>
             <ul class="styled-list include">
-                <?= html_entity_decode($tour['includes_html'] ?? '<li style="color: var(--text-muted);"><i class="fa-solid fa-minus" style="color:#ccc;"></i> Details will be added soon.</li>') ?>
+                <?= html_entity_decode($tour['includes_html'] ?? '<li style="color: var(--text-gray);"><i class="fa-solid fa-minus" style="color:#ccc;"></i> Details will be added soon.</li>') ?>
             </ul>
           </div>
           <div>
-            <h2 class="section-title"><i class="fa-solid fa-circle-xmark" style="color:var(--terracotta);"></i> Excluded</h2>
+            <h2 class="section-title"><i class="fa-solid fa-circle-xmark" style="color:#E74C3C;"></i> Excluded</h2>
             <ul class="styled-list exclude">
                 <?= html_entity_decode($tour['excludes_html']) ?>
             </ul>
           </div>
         </div>
 
-        <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 30px;">
-            <h2 class="section-title"><i class="fa-solid fa-suitcase" style="color:var(--turquoise);"></i> What to bring</h2>
+        <div style="border-top: 1px solid var(--border); padding-top: 30px; margin-top: 20px;">
+            <h2 class="section-title"><i class="fa-solid fa-suitcase" style="color:#1ABC9C;"></i> What to bring</h2>
             <ul class="styled-list bring" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
                 <?= html_entity_decode($tour['brings_html']) ?>
             </ul>
@@ -123,7 +130,7 @@ include 'includes/header.php';
 
       <!-- Itinerary -->
       <div class="content-box">
-        <h2 class="section-title"><i class="fa-solid fa-map-location-dot" style="color: var(--gold);"></i> Itinerary</h2>
+        <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Itinerary</h2>
         <div class="tour-text">
             <?= html_entity_decode($tour['itinerary']) ?>
         </div>
@@ -142,7 +149,7 @@ include 'includes/header.php';
           <div class="form-group"><input type="text" name="name" required placeholder="Full Name"></div>
           <div class="form-group"><input type="email" name="email" required placeholder="Email Address"></div>
           <div class="form-group"><textarea name="msg" rows="4" required placeholder="Date and number of people..."></textarea></div>
-          <button type="submit" class="btn-book"><i class="fa-brands fa-whatsapp"></i> Book via WhatsApp</button>
+          <button type="submit" class="btn-book"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</button>
         </form>
       </div>
     </div>

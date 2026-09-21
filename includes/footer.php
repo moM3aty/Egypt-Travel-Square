@@ -1,37 +1,38 @@
 <?php
 // Path: /includes/footer.php
 ?>
-  <footer class="footer" id="contact">
+  <footer class="footer" id="contact" style="background: var(--logo-navy); padding: 80px 0 0; position: relative;">
+    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--logo-gold), #8B6914, var(--logo-gold));"></div>
     <div class="container">
-      <div class="footer-grid">
+      <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; gap: 50px; padding-bottom: 60px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);" class="footer-grid">
         <div class="footer-brand">
           <a href="index.php" class="logo" style="display:inline-block; margin-bottom:15px;">
             <?php if(!empty($global_settings['default_logo'])): ?>
                 <img src="<?= $site_logo ?>" alt="Egypt Travel Square" style="height: 70px; border-radius: 8px;">
             <?php else: ?>
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="logo-icon" style="width:40px; height:40px; background:var(--logo-gold); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--logo-navy); font-size:18px;"><i class="fa-solid fa-ankh"></i></div>
-                    <span class="logo-text" style="color:var(--pure-white); font-family:var(--font-display); font-size:20px; font-weight:700;">Egypt<span style="color:var(--logo-gold);">Travel</span>Square</span>
+                    <div style="width:40px; height:40px; background:var(--logo-gold); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--logo-navy); font-size:18px;"><i class="fa-solid fa-ankh"></i></div>
+                    <span style="color:var(--pure-white); font-family:var(--font-display); font-size:20px; font-weight:700;">Egypt<span style="color:var(--logo-gold);">Travel</span>Square</span>
                 </div>
             <?php endif; ?>
           </a>
-          <p>Your trusted partner for extraordinary Egyptian adventures. With expert guides, luxury accommodations, and exclusive experiences, we transform travel dreams into reality.</p>
+          <p style="color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.9; margin: 24px 0;">Your trusted partner for extraordinary Egyptian adventures. With expert guides, luxury accommodations, and exclusive experiences, we transform travel dreams into reality.</p>
           
-          <div class="footer-social">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;" class="footer-social">
             <?php if(!empty($global_settings['facebook'])): ?>
-                <a href="<?= htmlspecialchars($global_settings['facebook']) ?>" aria-label="Facebook" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="<?= htmlspecialchars($global_settings['facebook']) ?>" style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: 0.3s;" onmouseover="this.style.background='var(--logo-gold)'; this.style.borderColor='var(--logo-gold)'; this.style.color='var(--logo-navy)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--pure-white)';" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
             <?php endif; ?>
             <?php if(!empty($global_settings['instagram'])): ?>
-                <a href="<?= htmlspecialchars($global_settings['instagram']) ?>" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                <a href="<?= htmlspecialchars($global_settings['instagram']) ?>" style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: 0.3s;" onmouseover="this.style.background='var(--logo-gold)'; this.style.borderColor='var(--logo-gold)'; this.style.color='var(--logo-navy)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--pure-white)';" target="_blank"><i class="fa-brands fa-instagram"></i></a>
             <?php endif; ?>
             <?php if(!empty($global_settings['tiktok'])): ?>
-                <a href="<?= htmlspecialchars($global_settings['tiktok']) ?>" aria-label="TikTok" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="<?= htmlspecialchars($global_settings['tiktok']) ?>" style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: 0.3s;" onmouseover="this.style.background='var(--logo-gold)'; this.style.borderColor='var(--logo-gold)'; this.style.color='var(--logo-navy)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--pure-white)';" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
             <?php endif; ?>
             <?php if(!empty($global_settings['youtube'])): ?>
-                <a href="<?= htmlspecialchars($global_settings['youtube']) ?>" aria-label="YouTube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                <a href="<?= htmlspecialchars($global_settings['youtube']) ?>" style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: 0.3s;" onmouseover="this.style.background='var(--logo-gold)'; this.style.borderColor='var(--logo-gold)'; this.style.color='var(--logo-navy)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--pure-white)';" target="_blank"><i class="fa-brands fa-youtube"></i></a>
             <?php endif; ?>
             <?php if(!empty($global_settings['tripadvisor'])): ?>
-                <a href="<?= htmlspecialchars($global_settings['tripadvisor']) ?>" aria-label="TripAdvisor" target="_blank">
+                <a href="<?= htmlspecialchars($global_settings['tripadvisor']) ?>" style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: 0.3s;" onmouseover="this.style.background='var(--logo-gold)'; this.style.borderColor='var(--logo-gold)'; this.style.color='var(--logo-navy)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='var(--pure-white)';" target="_blank">
                   <svg viewBox="0 0 512 512" width="16" height="16" fill="currentColor"><path d="M374.3 125.8c-14.8-14.8-40.2-14.8-54.9 0L256 189.2l-63.4-63.4c-14.8-14.8-40.2-14.8-54.9 0L24.5 239c-15.6 15.6-15.6 40.9 0 56.5l113.1 113.1c14.8 14.8 40.2 14.8 54.9 0L256 345.3l63.4 63.4c14.8 14.8 40.2 14.8 54.9 0l113.1-113.1c15.6-15.6 15.6-40.9 0-56.5l-113.1-113.2zM256 312c-30.9 0-56-25.1-56-56s25.1-56 56-56 56 25.1 56 56-25.1 56-56 56z"></path></svg>
                 </a>
             <?php endif; ?>
@@ -39,47 +40,47 @@
         </div>
         
         <div>
-          <h4 class="footer-title">Quick Links</h4>
-          <ul class="footer-links">
-            <li><a href="about.php">About Us</a></li>
-            <li><a href="packages.php">Tour Packages</a></li>
-            <li><a href="faq.php">Travel Tips & FAQs</a></li>
-            <li><a href="gallery.php">Gallery</a></li>
+          <h4 style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--pure-white); margin-bottom: 28px; position: relative; padding-bottom: 16px;">Quick Links<span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: var(--logo-gold);"></span></h4>
+          <ul style="list-style:none; padding:0;">
+            <li style="margin-bottom:14px;"><a href="about.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">About Us</a></li>
+            <li style="margin-bottom:14px;"><a href="packages.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Tour Packages</a></li>
+            <li style="margin-bottom:14px;"><a href="faq.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Travel Tips & FAQs</a></li>
+            <li style="margin-bottom:14px;"><a href="gallery.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Gallery</a></li>
           </ul>
         </div>
         
         <div>
-          <h4 class="footer-title">Support</h4>
-          <ul class="footer-links">
-            <li><a href="faq.php">FAQs</a></li>
-            <li><a href="payment.php">Payment Methods</a></li>
-            <li><a href="privacy.php">Privacy Policy</a></li>
-            <li><a href="cancellation.php">Cancellation Policy</a></li>
+          <h4 style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--pure-white); margin-bottom: 28px; position: relative; padding-bottom: 16px;">Support<span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: var(--logo-gold);"></span></h4>
+          <ul style="list-style:none; padding:0;">
+            <li style="margin-bottom:14px;"><a href="faq.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">FAQs</a></li>
+            <li style="margin-bottom:14px;"><a href="payment.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Payment Methods</a></li>
+            <li style="margin-bottom:14px;"><a href="privacy.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Privacy Policy</a></li>
+            <li style="margin-bottom:14px;"><a href="cancellation.php" style="color: rgba(255, 255, 255, 0.6); font-size: 15px; text-decoration:none;" onmouseover="this.style.color='#fff';" onmouseout="this.style.color='rgba(255,255,255,0.6)';">Cancellation Policy</a></li>
           </ul>
         </div>
         
         <div>
-          <h4 class="footer-title">Contact Us</h4>
-          <ul class="footer-contact">
-            <li><i class="fa-solid fa-phone"></i><span><?= htmlspecialchars($global_settings['phone'] ?? '+20 100 679 6511') ?></span></li>
-            <li><i class="fa-solid fa-envelope"></i><span><?= htmlspecialchars($global_settings['email'] ?? 'info@egypttravelsquare.com') ?></span></li>
-            <li><i class="fa-solid fa-location-dot"></i><span><?= htmlspecialchars($global_settings['address'] ?? 'Cairo, Egypt') ?></span></li>
+          <h4 style="font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--pure-white); margin-bottom: 28px; position: relative; padding-bottom: 16px;">Contact Us<span style="position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: var(--logo-gold);"></span></h4>
+          <ul style="list-style:none; padding:0;">
+            <li style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.6;"><i class="fa-solid fa-phone" style="color: var(--logo-gold); margin-top: 4px; width: 16px;"></i><span><?= htmlspecialchars($global_settings['phone'] ?? '+20 100 679 6511') ?></span></li>
+            <li style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.6;"><i class="fa-solid fa-envelope" style="color: var(--logo-gold); margin-top: 4px; width: 16px;"></i><span><?= htmlspecialchars($global_settings['email'] ?? 'info@egypttravelsquare.com') ?></span></li>
+            <li style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.6;"><i class="fa-solid fa-location-dot" style="color: var(--logo-gold); margin-top: 4px; width: 16px;"></i><span><?= htmlspecialchars($global_settings['address'] ?? 'Cairo, Egypt') ?></span></li>
           </ul>
         </div>
       </div>
       
-      <div class="footer-bottom">
+      <div style="padding: 24px 0; display: flex; justify-content: space-between; align-items: center; color: rgba(255, 255, 255, 0.5); font-size: 14px;" class="footer-bottom">
         <p>© <?= date('Y') ?> Egypt Travel Square. All Rights Reserved.</p>
-        <p class="designed-by">Designed by <span>GMTWEB</span></p>
+        <p>Designed by <span style="color: var(--logo-gold); font-weight: 600; letter-spacing: 1px;">GMTWEB</span></p>
       </div>
     </div>
   </footer>
 
-  <!-- الأزرار العائمة (تقييمات و واتساب) -->
-  <a href="reviews.php" class="floating-btn reviews-btn" title="Guest Reviews">
+  <!-- الأزرار العائمة -->
+  <a href="reviews.php" style="position: fixed; left: 30px; bottom: 105px; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--logo-navy); background: var(--logo-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; transition: 0.3s; text-decoration: none;" onmouseover="this.style.transform='scale(1.1)'; this.style.background='#b38f22';" onmouseout="this.style.transform='scale(1)'; this.style.background='var(--logo-gold)';" title="Guest Reviews">
     <i class="fa-solid fa-star"></i>
   </a>
-  <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $global_settings['phone'] ?? '201006796511') ?>" target="_blank" rel="noopener" class="floating-btn whatsapp-btn" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $global_settings['phone'] ?? '201006796511') ?>" target="_blank" rel="noopener" style="position: fixed; left: 30px; bottom: 30px; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; background: #25D366; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; transition: 0.3s; text-decoration: none;" onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';" aria-label="Chat on WhatsApp">
     <i class="fa-brands fa-whatsapp"></i>
   </a>
 
@@ -167,7 +168,6 @@
   <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     
-    // Track Visitors on Tours/Destinations
     Tawk_API.onLoad = function() {
         var pageName = "<?= isset($pageTitle) ? addslashes(str_replace(' | Egypt Travel Square', '', $pageTitle)) : 'Home Page' ?>";
         var pageUrl = window.location.href;

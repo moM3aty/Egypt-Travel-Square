@@ -145,6 +145,7 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
             <a href="reviews.php" class="<?= $current_page == 'reviews.php' ? 'active' : '' ?>"><i class="fa-solid fa-star"></i> Guest Reviews</a>
             <a href="faqs.php" class="<?= in_array($current_page, ['faqs.php', 'faq_form.php']) ? 'active' : '' ?>"><i class="fa-solid fa-circle-question"></i> FAQs</a>
             <a href="page_banners.php" class="<?= $current_page == 'page_banners.php' ? 'active' : '' ?>"><i class="fa-solid fa-panorama"></i> Page Banners</a>
+            <a href="about_settings.php" class="<?= $current_page == 'about_settings.php' ? 'active' : '' ?>"><i class="fa-solid fa-address-card"></i> About Us Settings</a>
             <a href="settings.php" class="<?= $current_page == 'settings.php' ? 'active' : '' ?>"><i class="fa-solid fa-gear"></i> Settings</a>
         </div>
         <div class="user-profile">
@@ -203,15 +204,22 @@ $admin_logo_url = get_image_url($admin_logo_path, 'logo');
             <?php endif; ?>
         });
 
+        // نظام التحميل الذكي
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', function() {
                 let hasFiles = false;
-                form.querySelectorAll('input[type="file"]').forEach(input => { if(input.files.length > 0) hasFiles = true; });
+                const fileInputs = form.querySelectorAll('input[type="file"]');
+                fileInputs.forEach(input => {
+                    if(input.files.length > 0) hasFiles = true;
+                });
+
                 if(hasFiles) {
                     Swal.fire({
-                        title: 'Processing...',
-                        html: 'Please wait while your files are being uploaded.<br><b>Do not close this window.</b>',
-                        allowOutsideClick: false, showConfirmButton: false,
+                        title: 'Uploading Data...',
+                        html: 'Please wait while your files are being securely uploaded to the server.<br><br><b>Do not close this window.</b>',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
                         didOpen: () => { Swal.showLoading(); }
                     });
                 }

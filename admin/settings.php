@@ -24,13 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // --- 2. تحديث إعدادات الموقع ---
+    // --- 2. تحديث إعدادات الموقع والصفحة الرئيسية ---
     $fields = [
         'phone', 'email', 'address', 'facebook', 'instagram', 'youtube', 'tiktok', 'tripadvisor',
         'home_hero_title', 'home_hero_subtitle', 'home_hero_btn1_text', 'home_hero_btn1_link',
-        'home_hero_btn2_text', 'home_hero_btn2_link',
-        'home_about_title', 'home_about_text', 'home_about_btn_text', 'home_about_btn_link',
-        'home_video_title', 'home_video_subtitle'
+        'home_hero_btn2_text', 'home_hero_btn2_link', 'home_video_title', 'home_video_subtitle'
     ];
     
     foreach ($fields as $field) {
@@ -47,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $upload_dir = 'uploads/';
-    if (!is_dir($upload_dir)) { mkdir($upload_dir, 0777, true); }
+    if (!is_dir($upload_dir)) { @mkdir($upload_dir, 0755, true); }
 
     $media_fields = [
         'default_logo' => ['jpg', 'jpeg', 'png', 'webp', 'svg'],
@@ -66,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtOld->execute([$img_field]);
                     $old_file = $stmtOld->fetchColumn();
                     if ($old_file && strpos($old_file, 'http') !== 0 && file_exists($upload_dir . $old_file)) {
-                        unlink($upload_dir . $old_file);
+                        @unlink($upload_dir . $old_file);
                     }
                     $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM settings WHERE setting_key = ?");
                     $stmtCheck->execute([$img_field]);
@@ -100,16 +98,17 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
     <h3 style="color:var(--navy); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">
         <i class="fa-solid fa-user-shield" style="color:#E74C3C;"></i> Admin Login Security
     </h3>
-    <form method="POST">
+    <form method="POST" action="settings.php">
         <input type="hidden" name="update_admin" value="1">
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
             <div class="form-group">
                 <label class="form-label">Admin Username *</label>
-                <input type="text" name="admin_username" class="form-control" value="<?= htmlspecialchars($_SESSION['admin_username']) ?>" required>
+                <input type="text" name="admin_username" class="form-control" value="<?= htmlspecialchars($_SESSION['admin_username']) ?>" required autocomplete="off">
             </div>
             <div class="form-group">
                 <label class="form-label">New Password <span style="color:var(--text-muted); font-weight:normal;">(Leave empty if you don't want to change it)</span></label>
-                <input type="password" name="admin_password" class="form-control" placeholder="Enter new password...">
+                <!-- إضافة autocomplete="new-password" لمنع المتصفح من كتابة الباسورد القديم بالخطأ -->
+                <input type="password" name="admin_password" class="form-control" placeholder="Enter new password..." autocomplete="new-password">
             </div>
         </div>
         <button type="submit" class="btn" style="background:#E74C3C; color:#fff; padding:12px 30px;"><i class="fa-solid fa-lock"></i> Update Credentials</button>
@@ -118,9 +117,8 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
 
 <!-- 2. Main Website Settings -->
 <div class="card">
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" action="settings.php">
         
-        <!-- Hero Text Section (Bg is now in sliders.php) -->
         <h3 style="color:var(--navy); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">
             <i class="fa-solid fa-heading" style="color:var(--gold);"></i> Home Page Hero Text
         </h3>
@@ -155,32 +153,6 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
             </div>
         </div>
 
-        <!-- About Text Section (Slider is now in sliders.php) -->
-        <h3 style="color:var(--navy); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-top:40px;">
-            <i class="fa-solid fa-address-card" style="color:var(--gold);"></i> Home Page: About Us Text
-        </h3>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;"><i class="fa-solid fa-circle-info"></i> Note: About section images are now managed in the "Home Sliders" tab.</p>
-
-        <div class="form-group">
-            <label class="form-label">About Section Title</label>
-            <input type="text" name="home_about_title" class="form-control" value="<?= htmlspecialchars($settings['home_about_title'] ?? 'Discover The Real Egypt') ?>">
-        </div>
-        <div class="form-group">
-            <label class="form-label">About Section Text</label>
-            <textarea name="home_about_text" class="form-control rich-editor" rows="4"><?= htmlspecialchars($settings['home_about_text'] ?? '') ?></textarea>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:40px;">
-            <div class="form-group">
-                <label class="form-label">Button Text</label>
-                <input type="text" name="home_about_btn_text" class="form-control" value="<?= htmlspecialchars($settings['home_about_btn_text'] ?? 'Read More About Us') ?>">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Button Link</label>
-                <input type="text" name="home_about_btn_link" class="form-control" value="<?= htmlspecialchars($settings['home_about_btn_link'] ?? 'about.php') ?>">
-            </div>
-        </div>
-
-        <!-- Video Promo Section -->
         <h3 style="color:var(--navy); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px; margin-top:40px;">
             <i class="fa-solid fa-play-circle" style="color:var(--gold);"></i> Home Page: Promotional Video Section
         </h3>
@@ -211,7 +183,6 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
             </div>
         </div>
 
-        <!-- Branding & Contact (As Before) -->
         <h3 style="color:var(--navy); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">
             <i class="fa-solid fa-image" style="color:var(--gold);"></i> Branding & Fallbacks
         </h3>
@@ -219,16 +190,12 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
             <div class="form-group">
                 <label class="form-label">Website Logo</label>
                 <input type="file" name="default_logo" class="form-control" accept="image/*">
-                <div style="margin-top:10px;">
-                    <img src="<?= get_image_url($settings['default_logo'] ?? '', 'logo') ?>" style="height:45px; background:#0A1628; padding:6px; border-radius:6px;">
-                </div>
+                <div style="margin-top:10px;"><img src="<?= get_image_url($settings['default_logo'] ?? '', 'logo') ?>" style="height:45px; background:#0A1628; padding:6px; border-radius:6px;"></div>
             </div>
             <div class="form-group">
                 <label class="form-label">Default Fallback Tour Image</label>
                 <input type="file" name="default_tour_img" class="form-control" accept="image/*">
-                <div style="margin-top:10px;">
-                    <img src="<?= get_image_url($settings['default_tour_img'] ?? '', 'tour') ?>" style="height:50px; width:90px; object-fit:cover; border-radius:6px;">
-                </div>
+                <div style="margin-top:10px;"><img src="<?= get_image_url($settings['default_tour_img'] ?? '', 'tour') ?>" style="height:50px; width:90px; object-fit:cover; border-radius:6px;"></div>
             </div>
         </div>
 
@@ -236,40 +203,19 @@ $settings = $pdo->query("SELECT setting_key, setting_value FROM settings")->fetc
             <i class="fa-solid fa-address-book" style="color:var(--gold);"></i> Contact & Social Links
         </h3>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;">
-            <div class="form-group">
-                <label class="form-label">Phone / WhatsApp Number</label>
-                <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($settings['phone'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Primary Email Address</label>
-                <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($settings['email'] ?? '') ?>">
-            </div>
+            <div class="form-group"><label class="form-label">Phone / WhatsApp</label><input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($settings['phone'] ?? '') ?>"></div>
+            <div class="form-group"><label class="form-label">Primary Email</label><input type="email" name="email" class="form-control" value="<?= htmlspecialchars($settings['email'] ?? '') ?>"></div>
         </div>
         <div class="form-group" style="margin-bottom:20px;">
             <label class="form-label">Office Address</label>
             <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($settings['address'] ?? '') ?>">
         </div>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-            <div class="form-group">
-                <label class="form-label"><i class="fa-brands fa-facebook" style="color:#1877F2;"></i> Facebook URL</label>
-                <input type="url" name="facebook" class="form-control" value="<?= htmlspecialchars($settings['facebook'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label class="form-label"><i class="fa-brands fa-instagram" style="color:#E4405F;"></i> Instagram URL</label>
-                <input type="url" name="instagram" class="form-control" value="<?= htmlspecialchars($settings['instagram'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label class="form-label"><i class="fa-brands fa-youtube" style="color:#FF0000;"></i> YouTube URL</label>
-                <input type="url" name="youtube" class="form-control" value="<?= htmlspecialchars($settings['youtube'] ?? '') ?>">
-            </div>
-            <div class="form-group">
-                <label class="form-label"><i class="fa-brands fa-tiktok" style="color:#000;"></i> TikTok URL</label>
-                <input type="url" name="tiktok" class="form-control" value="<?= htmlspecialchars($settings['tiktok'] ?? '') ?>">
-            </div>
-            <div class="form-group" style="grid-column: 1 / -1;">
-                <label class="form-label"><i class="fa-solid fa-star" style="color:#00AA6C;"></i> TripAdvisor Link</label>
-                <input type="url" name="tripadvisor" class="form-control" value="<?= htmlspecialchars($settings['tripadvisor'] ?? '') ?>">
-            </div>
+            <div class="form-group"><label class="form-label">Facebook URL</label><input type="url" name="facebook" class="form-control" value="<?= htmlspecialchars($settings['facebook'] ?? '') ?>"></div>
+            <div class="form-group"><label class="form-label">Instagram URL</label><input type="url" name="instagram" class="form-control" value="<?= htmlspecialchars($settings['instagram'] ?? '') ?>"></div>
+            <div class="form-group"><label class="form-label">YouTube URL</label><input type="url" name="youtube" class="form-control" value="<?= htmlspecialchars($settings['youtube'] ?? '') ?>"></div>
+            <div class="form-group"><label class="form-label">TikTok URL</label><input type="url" name="tiktok" class="form-control" value="<?= htmlspecialchars($settings['tiktok'] ?? '') ?>"></div>
+            <div class="form-group" style="grid-column: 1 / -1;"><label class="form-label">TripAdvisor Link</label><input type="url" name="tripadvisor" class="form-control" value="<?= htmlspecialchars($settings['tripadvisor'] ?? '') ?>"></div>
         </div>
 
         <button type="submit" class="btn btn-primary" style="margin-top:20px; padding:16px 40px; font-size:16px;">

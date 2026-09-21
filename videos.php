@@ -9,6 +9,17 @@ $pageTitle = "Videos | Egypt Travel Square";
 include 'includes/header.php';
 ?>
 
+<style>
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; }
+    .video-card { position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-elegant); background: var(--pure-white); transition: var(--transition); border: 1px solid var(--border); }
+    .video-card:hover { transform: translateY(-8px); border-color: var(--logo-gold); }
+    .video-card video { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; background: #000; }
+    .video-info { padding: 25px; }
+    .video-info h3 { font-size: 22px; color: var(--logo-navy); margin-bottom: 10px; font-family: var(--font-display); font-weight: 700; }
+    .video-info p { font-size: 15px; color: var(--text-gray); line-height: 1.6; }
+    @media (max-width: 767px) { .video-grid { grid-template-columns: 1fr; } }
+</style>
+
 <section class="page-hero">
     <div class="page-hero-bg">
         <img src="<?= get_image_url($settings['hero_videos'] ?? '', 'placeholder') ?>" alt="Videos">
@@ -22,12 +33,18 @@ include 'includes/header.php';
     </div>
 </section>
 
-<section class="video-section reveal" style="padding: 100px 0;">
+<section class="section-padding" style="background: var(--off-white);">
     <div class="container">
+        <div class="section-header reveal">
+            <div class="gold-line"></div>
+            <h2>Experience <span>Egypt</span></h2>
+            <p>Watch our latest tours and adventures in the heart of Egypt.</p>
+        </div>
+
         <?php if(empty($videos)): ?>
-            <h3 style="text-align:center; color:var(--navy);">More videos coming soon!</h3>
+            <p style="text-align:center; color:var(--text-gray);">More videos coming soon!</p>
         <?php else: ?>
-            <div class="video-grid">
+            <div class="video-grid reveal">
                 <?php foreach($videos as $vid): ?>
                 <div class="video-card">
                     <video controls>

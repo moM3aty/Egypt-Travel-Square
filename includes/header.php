@@ -7,16 +7,13 @@ if (file_exists(__DIR__ . '/functions.php')) {
     require_once __DIR__ . '/functions.php';
 }
 
-// جلب الإعدادات العامة لكي تكون متاحة في الهيدر والفوتر وكل الصفحات
 global $pdo;
 $stmt_set = $pdo->query("SELECT setting_key, setting_value FROM settings");
 $global_settings = $stmt_set->fetchAll(PDO::FETCH_KEY_PAIR);
 
-// تحديد اللوجو والـ Favicon
 $site_logo = get_image_url($global_settings['default_logo'] ?? '', 'logo');
 $site_favicon = get_image_url($global_settings['default_tour_img'] ?? '', 'tour');
 
-// جلب جميع المدن من قاعدة البيانات لعرضها في القائمة العلوية
 $stmt_nav_dest = $pdo->query("SELECT name, slug FROM destinations ORDER BY id ASC");
 $nav_destinations = $stmt_nav_dest->fetchAll();
 ?>
@@ -36,20 +33,21 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
+    /* ===================== LUXURY ROYAL THEME VARIABLES ===================== */
     :root {
-      --logo-navy: #0A1628;
-      --logo-gold: #C9A227;
-      --logo-gold-dark: #8B6914;
-      --pure-white: #FFFFFF;
-      --off-white: #F9FAFB;
-      --text-dark: #1A1A1A;
-      --text-gray: #666666;
-      --border: #EAEAEA;
-      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      --font-display: 'Cormorant Garamond', serif;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-      --header-h: 80px;
-      --shadow-elegant: 0 15px 35px rgba(10, 22, 40, 0.08);
+        --logo-navy: #0A1628;
+        --logo-gold: #C9A227;
+        --logo-gold-dark: #8B6914;
+        --pure-white: #FFFFFF;
+        --off-white: #F9FAFB;
+        --text-dark: #1A1A1A;
+        --text-gray: #666666;
+        --border: #EAEAEA;
+        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        --font-display: 'Cormorant Garamond', serif;
+        --font-body: 'Plus Jakarta Sans', sans-serif;
+        --header-h: 80px;
+        --shadow-elegant: 0 15px 35px rgba(10, 22, 40, 0.08);
     }
     
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -111,17 +109,19 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
     .dropdown-menu li:last-child a { border-bottom: none; }
     .dropdown-menu a:hover { background: rgba(201,162,39,0.1) !important; color: var(--logo-gold) !important; padding-left: 30px !important;}
     
+    /* Search Icon */
     .nav-search-btn { font-size: 18px; color: var(--pure-white) !important; cursor: pointer; transition: 0.3s; padding: 10px !important;}
     .nav-search-btn:hover { color: var(--logo-gold) !important; transform: scale(1.1); }
     .nav-search-btn::after { display: none !important; }
 
+    /* Book Now Button */
     .nav-cta { display: inline-flex !important; align-items: center; justify-content: center; height: 44px; padding: 0 28px !important; background: var(--logo-gold); color: var(--logo-navy) !important; border-radius: 4px; font-weight: 700 !important; font-size: 13px !important; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); border: 2px solid var(--logo-gold); margin-left: 12px; }
     .nav-cta:hover { background: transparent !important; color: var(--logo-gold) !important; transform: translateY(-2px); }
     .nav-cta::after { display: none !important; }
     
     .mobile-toggle { display: none; background: none; border: none; color: var(--pure-white); font-size: 26px; cursor: pointer; padding: 8px; z-index: 10; }
 
-    /* ===================== SEARCH OVERLAY ===================== */
+    /* ===================== SEARCH OVERLAY MODAL ===================== */
     .search-overlay { position: fixed; inset: 0; background: rgba(10,22,40,0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.4s ease; }
     .search-overlay.active { opacity: 1; pointer-events: auto; }
     .search-close { position: absolute; top: 40px; right: 40px; font-size: 40px; color: rgba(255,255,255,0.5); cursor: pointer; transition: 0.3s; }
@@ -134,41 +134,76 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
     .search-form button { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--logo-gold); font-size: 28px; cursor: pointer; transition: 0.3s;}
     .search-form button:hover { transform: translateY(-50%) scale(1.1); }
 
-    /* ===================== FOOTER ===================== */
-    .footer { background: var(--logo-navy); padding: 80px 0 0; position: relative; }
-    .footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--logo-gold), #8B6914, var(--logo-gold)); }
-    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; gap: 50px; padding-bottom: 60px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-    .footer-brand p { color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.9; margin: 24px 0; }
-    .footer-social { display: flex; gap: 12px; flex-wrap: wrap;}
-    .footer-social a { width: 40px; height: 40px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--pure-white); transition: all 0.3s ease; }
-    .footer-social a:hover { background: var(--logo-gold); border-color: var(--logo-gold); color: var(--logo-navy); transform: translateY(-4px); }
+    /* ===================== GLOBAL LAYOUTS (FOR INNER PAGES) ===================== */
+    .page-hero { position: relative; height: 50vh; min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; margin:0;} 
+    .page-hero-bg { position: absolute; inset: 0; z-index: 0; } 
+    .page-hero-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); transform: scale(1.05); } 
+    .page-hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10, 22, 40, 0.9) 0%, rgba(10, 22, 40, 0.3) 100%); } 
+    .page-hero-content { position: relative; z-index: 2; color: var(--pure-white); margin-top: 50px; animation: fadeInUp 1s ease both;} 
+    .breadcrumb { font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--logo-gold); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; } 
+    .breadcrumb a { transition: color 0.3s ease; color: rgba(255,255,255,0.7); } 
+    .breadcrumb a:hover { color: var(--pure-white); } 
+    .page-hero-title { font-size: clamp(40px, 5vw, 65px); font-weight: 700; line-height: 1.1; margin-bottom: 20px; color: var(--pure-white); }
+    .page-hero-title span { color: var(--logo-gold); font-style: italic; font-weight: 400; }
     
-    .footer-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--pure-white); margin-bottom: 28px; position: relative; padding-bottom: 16px; }
-    .footer-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 2px; background: var(--logo-gold); }
-    
-    .footer-links li { margin-bottom: 14px; }
-    .footer-links a { color: rgba(255, 255, 255, 0.6); font-size: 15px; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
-    .footer-links a::before { content: '\f105'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--logo-gold); opacity: 0; transform: translateX(-10px); transition: all 0.3s ease; font-size: 12px; }
-    .footer-links a:hover { color: var(--pure-white); padding-left: 8px; }
-    .footer-links a:hover::before { opacity: 1; transform: translateX(0); }
-    
-    .footer-contact li { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; color: rgba(255, 255, 255, 0.6); font-size: 15px; line-height: 1.6;}
-    .footer-contact i { color: var(--logo-gold); margin-top: 4px; width: 16px; text-align: center; flex-shrink: 0;}
-    
-    .footer-bottom { padding: 24px 0; display: flex; justify-content: space-between; align-items: center; color: rgba(255, 255, 255, 0.5); font-size: 14px; }
-    .footer-bottom .designed-by span { color: var(--logo-gold); font-weight: 600; letter-spacing: 1px; }
+    .section-padding { padding: 100px 0; }
+    .section-header { text-align: center; max-width: 650px; margin: 0 auto 60px; display: flex; flex-direction: column; align-items: center;}
+    .gold-line { width: 30px; height: 3px; background: var(--logo-gold); margin-bottom: 20px; }
+    .section-header h2 { font-family: var(--font-display); font-size: clamp(38px, 5vw, 50px); color: var(--logo-navy); margin-bottom: 20px; font-weight: 700; line-height: 1.2; }
+    .section-header h2 span { color: var(--logo-gold); font-style: italic; font-weight: 400;}
+    .section-header p { font-size: 16px; color: var(--text-gray); line-height: 1.8; }
 
-    /* ===================== FLOATING BUTTONS ===================== */
-    .floating-btn { position: fixed; left: 30px; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; transition: transform 0.3s ease; text-decoration: none; }
-    .floating-btn:hover { transform: scale(1.1); color: white; }
-    .whatsapp-btn { bottom: 30px; background: #25D366; }
-    .reviews-btn { bottom: 105px; background: var(--logo-gold); color: var(--logo-navy); font-size: 24px; }
-    .reviews-btn:hover { color: var(--logo-navy); background: var(--logo-gold-dark); }
+    /* Buttons */
+    .btn-gold { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 35px; background: var(--logo-gold); color: var(--logo-navy); font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; transition: var(--transition); border: 2px solid var(--logo-gold); border-radius: 4px; }
+    .btn-gold:hover { background: transparent; color: var(--logo-gold); }
+    .btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 35px; border: 2px solid var(--logo-navy); color: var(--logo-navy); font-weight: 600; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; transition: var(--transition); border-radius: 4px; }
+    .btn-outline:hover { background: var(--logo-navy); color: var(--pure-white); }
 
-    /* ===================== RESPONSIVE (HEADER & FOOTER) ===================== */
-    @media (max-width: 1200px) { 
-        .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; } 
-    }
+    /* ===================== TOURS CARDS (LUXURY) ===================== */
+    .tours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 35px; }
+    .tour-card { background: var(--pure-white); border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: var(--transition); display: flex; flex-direction: column; border: 1px solid #EEEEEE; border-bottom: 3px solid transparent;}
+    .tour-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-elegant); border-bottom-color: var(--logo-gold); }
+    .tour-image { position: relative; height: 260px; overflow: hidden; display: block; }
+    .tour-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+    .tour-card:hover .tour-image img { transform: scale(1.08); }
+    .tour-wishlist { position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ccc; cursor: pointer; transition: var(--transition); }
+    .tour-wishlist:hover { color: #E74C3C; }
+    .tour-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+    .tour-location { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+    .tour-location i { color: var(--logo-gold); font-size: 14px;}
+    .tour-name { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--logo-navy); margin-bottom: 20px; line-height: 1.3; transition: color 0.3s ease; text-decoration: none; display: block;}
+    .tour-card:hover .tour-name { color: var(--logo-gold); }
+    .tour-meta { display: flex; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid #EEEEEE; margin-bottom: 20px; }
+    .tour-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-gray); font-weight: 500;}
+    .tour-meta-item i { color: var(--logo-navy); }
+    .tour-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; }
+    .tour-price-label { font-size: 11px; color: var(--text-gray); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;}
+    .tour-price-amount { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--logo-navy); line-height: 1;}
+    .tour-book-btn { width: 45px; height: 45px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--logo-navy); font-size: 16px; transition: var(--transition); background: transparent; }
+    .tour-card:hover .tour-book-btn { background: var(--logo-navy); color: var(--logo-gold); border-color: var(--logo-navy); }
+
+    /* ===================== DESTINATIONS GRID ===================== */
+    .dest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .dest-card { position: relative; overflow: hidden; cursor: pointer; height: 450px; border-radius: 8px; transition: var(--transition); }
+    .dest-card-bg { position: absolute; inset: 0; transition: transform 0.8s ease; }
+    .dest-card-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .dest-card:hover .dest-card-bg { transform: scale(1.1); }
+    .dest-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,22,40,0.9) 0%, rgba(10,22,40,0.1) 60%, transparent 100%); transition: var(--transition); }
+    .dest-card:hover .dest-card-overlay { background: linear-gradient(to top, rgba(10,22,40,0.95) 0%, rgba(10,22,40,0.4) 60%, rgba(10,22,40,0.1) 100%); }
+    .dest-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 30px; color: var(--pure-white); transition: var(--transition); text-align: center; }
+    .dest-card:hover .dest-card-content { transform: translateY(-10px); }
+    .dest-name { font-family: var(--font-display); font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+    .dest-excerpt { font-size: 14px; color: rgba(255, 255, 255, 0.7); line-height: 1.6; margin-bottom: 0; opacity: 0; height: 0; transition: var(--transition); overflow: hidden; }
+    .dest-card:hover .dest-excerpt { opacity: 1; height: auto; margin-bottom: 15px; margin-top: 10px;}
+    .dest-cta { font-size: 12px; font-weight: 700; color: var(--logo-gold); text-transform: uppercase; letter-spacing: 2px; opacity: 0; transition: var(--transition); display: inline-block;}
+    .dest-card:hover .dest-cta { opacity: 1; }
+
+    /* ===================== POLICIES & FORMS ===================== */
+    .policy-container { background: var(--pure-white); padding: 50px; border-radius: 8px; box-shadow: var(--shadow-elegant); max-width: 900px; margin: 0 auto; border-top: 4px solid var(--logo-gold);}
+    .policy-container h2 { font-family: var(--font-display); color: var(--logo-navy); font-size: 32px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 25px; margin-top: 40px;}
+    .policy-container h2:first-child { margin-top: 0; }
+    .policy-container p { font-size: 16px; color: var(--text-gray); line-height: 1.9; margin-bottom: 20px; }
+
     @media (max-width:991px) {
       :root { --header-h: 70px; }
       .mobile-toggle { display: block; }
@@ -181,17 +216,13 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
       .dropdown.open .dropdown-menu { max-height: 500px; }
       .dropdown-menu a { padding: 12px 40px !important; }
       .nav-cta { margin: 20px 30px !important; width: calc(100% - 60px); justify-content: center;}
-    }
-    @media (max-width: 767px) {
-      .footer { padding-top: 60px; }
-      .footer-grid { grid-template-columns: 1fr; gap: 40px; text-align: left; }
-      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+      .tours-grid { grid-template-columns: 1fr; }
+      .dest-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <div class="top-bar" id="topBar">
       <div class="container">
           <div class="top-bar-contact">
@@ -206,12 +237,12 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
               <?php if(!empty($global_settings['facebook'])): ?><a href="<?= htmlspecialchars($global_settings['facebook']) ?>" target="_blank"><i class="fa-brands fa-facebook-f"></i></a><?php endif; ?>
               <?php if(!empty($global_settings['instagram'])): ?><a href="<?= htmlspecialchars($global_settings['instagram']) ?>" target="_blank"><i class="fa-brands fa-instagram"></i></a><?php endif; ?>
               <?php if(!empty($global_settings['youtube'])): ?><a href="<?= htmlspecialchars($global_settings['youtube']) ?>" target="_blank"><i class="fa-brands fa-youtube"></i></a><?php endif; ?>
+              <?php if(!empty($global_settings['tiktok'])): ?><a href="<?= htmlspecialchars($global_settings['tiktok']) ?>" target="_blank"><i class="fa-brands fa-tiktok"></i></a><?php endif; ?>
               <?php if(!empty($global_settings['tripadvisor'])): ?><a href="<?= htmlspecialchars($global_settings['tripadvisor']) ?>" target="_blank"><i class="fa-solid fa-star"></i></a><?php endif; ?>
           </div>
       </div>
   </div>
 
-  <!-- HEADER -->
   <header class="header" id="header">
     <div class="container">
       <nav class="nav">
@@ -270,7 +301,6 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
           
           <li><a href="contact.php">Contact</a></li>
           
-          <!-- أيقونة البحث -->
           <li>
               <a href="javascript:void(0)" class="nav-search-btn" onclick="document.getElementById('searchOverlay').classList.add('active')">
                   <i class="fa-solid fa-magnifying-glass"></i>
@@ -286,7 +316,6 @@ $nav_destinations = $stmt_nav_dest->fetchAll();
     </div>
   </header>
 
-  <!-- SEARCH OVERLAY MODAL -->
   <div class="search-overlay" id="searchOverlay">
       <div class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active')"><i class="fa-solid fa-xmark"></i></div>
       <div class="search-form">

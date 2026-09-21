@@ -3,29 +3,6 @@
 session_start();
 require_once '../config.php';
 
-// ==========================================
-// كود ذكي للإصلاح التلقائي (Auto-Fix)
-// ==========================================
-try {
-    // 1. التأكد من إنشاء جدول المستخدمين إذا لم يكن موجوداً
-    $pdo->exec("CREATE TABLE IF NOT EXISTS `users` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `username` varchar(50) NOT NULL,
-        `password` varchar(255) NOT NULL,
-        PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-
-    // 2. التأكد من وجود حساب الـ admin
-    $stmt = $pdo->query("SELECT * FROM users WHERE username = 'admin'");
-    if($stmt->rowCount() == 0) {
-        $hashed = password_hash('admin123', PASSWORD_DEFAULT);
-        $pdo->exec("INSERT INTO users (username, password) VALUES ('admin', '$hashed')");
-    }
-} catch(PDOException $e) {
-    // تجاهل الأخطاء هنا
-}
-// ==========================================
-
 // إذا كان مسجل الدخول بالفعل، تحويله للرئيسية
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     header("Location: index.php");
@@ -42,26 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
-    if ($user) {
-        // التحقق من الباسورد
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_username'] = $user['username'];
-            header("Location: index.php");
-            exit;
-        } else {
-            // إصلاح ذاتي: لو كتب admin123 والتشفير القديم كان فيه مشكلة، هيتم تحديثه ويدخله فوراً
-            if ($username === 'admin' && $password === 'admin123') {
-                $newHash = password_hash('admin123', PASSWORD_DEFAULT);
-                $pdo->prepare("UPDATE users SET password = ? WHERE username = 'admin'")->execute([$newHash]);
-                $_SESSION['admin_logged_in'] = true;
-                $_SESSION['admin_username'] = $user['username'];
-                header("Location: index.php");
-                exit;
-            } else {
-                $error = "Invalid username or password!";
-            }
-        }
+    // التحقق المباشر والصارم من الباسورد الفعلي في قاعدة البيانات
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_username'] = $user['username'];
+        header("Location: index.php");
+        exit;
     } else {
         $error = "Invalid username or password!";
     }
@@ -126,155 +89,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-top: 5px solid var(--gold);
         }
 
-        .logo-area {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            border-radius: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--navy);
-            font-size: 28px;
-            margin-bottom: 15px;
-            box-shadow: 0 8px 24px rgba(201, 162, 39, 0.3);
-            transition: transform 0.3s ease;
-        }
+        .logo-area { text-align: center; margin-bottom: 30px; }
         
-        .logo-icon:hover { transform: rotate(15deg) scale(1.05); }
-
-        .logo-text {
-            font-family: var(--font-display);
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--navy);
-            display: block;
-        }
-
-        .logo-text span { color: var(--gold); }
-
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .form-group i {
-            position: absolute;
-            top: 50%;
-            left: 18px;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 16px 16px 16px 50px;
-            border: 1px solid #E0E0E0;
-            border-radius: 12px;
-            font-size: 15px;
-            background: #F9F9F9;
-            color: var(--navy);
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .form-control:focus {
-            background: var(--white);
-            border-color: var(--gold);
-            box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.1);
-        }
-
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group i { position: absolute; top: 50%; left: 18px; transform: translateY(-50%); color: #999; font-size: 18px; }
+        
+        .form-control { width: 100%; padding: 16px 16px 16px 50px; border: 1px solid #E0E0E0; border-radius: 12px; font-size: 15px; background: #F9F9F9; color: var(--navy); transition: all 0.3s ease; outline: none; }
+        .form-control:focus { background: var(--white); border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.1); }
         .form-control:focus + i { color: var(--gold); }
 
-        .btn-login {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--navy);
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 8px 20px rgba(201, 162, 39, 0.3);
-        }
+        .btn-login { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--navy); border: none; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.3s ease; margin-top: 10px; box-shadow: 0 8px 20px rgba(201, 162, 39, 0.3); }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(201, 162, 39, 0.4); }
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(201, 162, 39, 0.4);
-        }
+        .error-message { background: #FFF0F0; color: #D32F2F; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 20px; border: 1px solid #FFCDD2; }
+        .footer-text { text-align: center; margin-top: 25px; font-size: 13px; color: #888; }
 
-        .error-message {
-            background: #FFF0F0;
-            color: #D32F2F;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid #FFCDD2;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 13px;
-            color: #888;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
     <div class="login-wrapper">
         <div class="login-card">
-            
             <div class="logo-area">
-                <img src="../img/logo2.png" width="250px" \>
+                <img src="../img/logo2.png" width="250px" alt="Logo">
                 <p style="color: #666; margin-top: 5px; font-size: 14px;">Secure Admin Control Panel</p>
             </div>
 
             <?php if ($error): ?>
-                <div class="error-message">
-                    <i class="fa-solid fa-circle-exclamation" style="margin-right: 5px;"></i> <?= $error ?>
-                </div>
+                <div class="error-message"><i class="fa-solid fa-circle-exclamation" style="margin-right: 5px;"></i> <?= $error ?></div>
             <?php endif; ?>
 
             <form method="POST">
                 <div class="form-group">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" name="username" class="form-control" placeholder="Username" required autocomplete="off">
+                    <input type="text" name="username" class="form-control" placeholder="Username" required autocomplete="username">
                 </div>
-
                 <div class="form-group">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="current-password">
                 </div>
-
-                <button type="submit" class="btn-login">
-                    Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
-                </button>
+                <button type="submit" class="btn-login">Sign In <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></button>
             </form>
             
-            <div class="footer-text">
-                &copy; <?= date('Y') ?> Egypt Travel Square. All Rights Reserved.
-            </div>
-
+            <div class="footer-text">&copy; <?= date('Y') ?> Egypt Travel Square. All Rights Reserved.</div>
         </div>
     </div>
-
 </body>
 </html>
